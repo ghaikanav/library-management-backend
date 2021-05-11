@@ -3,7 +3,8 @@ create table BOOK_REQUESTS (
 	USER_ID INT,
 	BOOK_TITLE VARCHAR(9),
 	AUTHOR VARCHAR(9),
-	REQUESTED_AT DATE
+	REQUESTED_AT DATE,
+	FOREIGN KEY(USER_ID) REFERENCES USERS(id)
 );
 insert into BOOK_REQUESTS (id, USER_ID, BOOK_TITLE, AUTHOR, REQUESTED_AT) values (1001, 15, 'Natural Sheep Care', 'Pat Coleby', '10/12/2020');
 insert into BOOK_REQUESTS (id, USER_ID, BOOK_TITLE, AUTHOR, REQUESTED_AT) values (1002, 141, 'My Book of Sentences', 'Kumon Publishing', '03/03/2021');
