@@ -1,15 +1,15 @@
 create table BOOKS (
 	isbn BIGINT PRIMARY KEY,
-	TITLE VARCHAR,
-	AUTHOR VARCHAR,
+	TITLE VARCHAR(200),
+	AUTHOR VARCHAR(200),
 	PUBLISHED_DATE DATE,
 	PRICE DECIMAL(4,2),
-	GENRE VARCHAR,
+	GENRE VARCHAR(200),
 	RATING DECIMAL(3,2),
 	QUANTITY INT,
-	BOOK_COVER VARCHAR,
+	BOOK_COVER VARCHAR(500),
 	TOTAL_ISSUES INT,
-	PUBLISHER VARCHAR(20)
+	PUBLISHER VARCHAR(50)
 );
 insert into BOOKS (isbn, TITLE, AUTHOR, PUBLISHED_DATE, PRICE, GENRE, RATING, QUANTITY, BOOK_COVER, TOTAL_ISSUES, PUBLISHER) values (8283310000000, 'Armchair Guide to Property Investing', 'Bryce Holdaway', '28/10/2014', 17.3, 'Business-Finance-Law', 4.15, 8, 'https://d1w7fb2mkkr3kw.cloudfront.net/assets/images/book/mid/9780/9942/9780994256041.jpg', 23, 'Harper Collins');
 insert into BOOKS (isbn, TITLE, AUTHOR, PUBLISHED_DATE, PRICE, GENRE, RATING, QUANTITY, BOOK_COVER, TOTAL_ISSUES, PUBLISHER) values (8606200000000, 'CHERUB: The Fall', 'Robert Muchamore', '27/01/2001', 7.09, 'Teen-Young-Adult', 4.32, 1, 'https://d1w7fb2mkkr3kw.cloudfront.net/assets/images/book/mid/9780/3409/9780340911709.jpg', 37, 'Harper Collins');
