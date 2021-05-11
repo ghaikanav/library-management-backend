@@ -1,6 +1,6 @@
 create table REVIEWS (
 	id INT,
-	ISSUE_ID VARCHAR(7),
+	ISSUE_ID INT,
 	RATING INT,
 	REVIEW VARCHAR(5476)
 );
