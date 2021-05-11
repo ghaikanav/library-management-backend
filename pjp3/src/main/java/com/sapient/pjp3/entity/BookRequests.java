@@ -11,13 +11,10 @@ import lombok.Data;
 @Data
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User {
+public class BookRequests {
 	private int id;
-	private String fullname;
-	private Date created_at;
-	private int total_borrowed_books;
-	private int current_borrowed_books;
-	private int fine;
-	
-
+	private int user_id;
+	private String book_title;
+	private String author;
+	private Date requested_at;
 }

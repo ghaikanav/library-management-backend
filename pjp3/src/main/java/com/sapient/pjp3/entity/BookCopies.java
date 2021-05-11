@@ -11,13 +11,9 @@ import lombok.Data;
 @Data
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User {
+public class BookCopies {
 	private int id;
-	private String fullname;
-	private Date created_at;
-	private int total_borrowed_books;
-	private int current_borrowed_books;
-	private int fine;
-	
-
+	private long isbn;
+	private Date added_at;
+	private boolean is_borrowed;
 }
