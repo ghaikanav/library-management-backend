@@ -1,9 +1,9 @@
 create table REVIEWS (
 	id INT PRIMARY KEY,
-	ISSUE_ID VARCHAR(7),
+	ISSUE_ID INT,
 	RATING DECIMAL(3,2),
 	REVIEW VARCHAR(5476),
-	FOREIGN KEY(ISSUE_ID) references(ISSUES_)
+	FOREIGN KEY(ISSUE_ID) references(ISSUES)
 );
 insert into REVIEWS (id, ISSUE_ID, RATING, REVIEW) values (32056, 202103, 2.2, 'While some plot points stretched credibility a bit, this did not really matter very much in the long run. This is a great read. Told from three different viewpoints, the central mystery unfolds through first person testimony of the participants. Never dull.');
 insert into REVIEWS (id, ISSUE_ID, RATING, REVIEW) values (32057, 202101, 4.82, 'I was generally disappointed in this book given all the hype and five-star reviews. While similar to Gone Girl, it was not as rich in character development. I found it difficulty to care about the fate of any of the main characters.  I suspected "the twist"about halfway through. Normally, this would not have been a problem had the writing and characters been more compelling. Still, it''s probably a matter of taste.');
