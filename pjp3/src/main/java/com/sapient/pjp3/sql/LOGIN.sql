@@ -1,7 +1,7 @@
 create table LOGIN (
 	id INT,
-	EMAIL VARCHAR(6),
-	PASSWORD VARCHAR(6),
+	EMAIL VARCHAR,
+	PASSWORD VARCHAR,
 	FOREIGN KEY(id) references USERS(id) 
 );
 insert into LOGIN (id, EMAIL, PASSWORD) values (1, 'sandrich0@omniture.com', 'nVxvMrpU');
