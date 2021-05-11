@@ -2,7 +2,7 @@ create table BOOK_COPIES (
 	id INT PRIMARY KEY,
 	isbn BIGINT,
 	added_at DATE,
-	is_borrowed VARCHAR(50),
+	is_borrowed BOOLEAN,
 	FOREIGN KEY(isbn) references BOOKS(isbn) 
 
 );
