@@ -1,9 +1,9 @@
 create table BOOK_COPIES (
 	id INT PRIMARY KEY,
-	isbn VARCHAR(9),
+	isbn VARCHAR(11),
 	added_at DATE,
 	is_borrowed VARCHAR(50),
-	FOREIGN KEY(isbn) references(BOOKS)
+	FOREIGN KEY(isbn) references BOOKS(isbn)
 
 );
 insert into BOOK_COPIES (id, isbn, added_at, is_borrowed) values (5001, 8283310000000, '10/04/2021', 1);
