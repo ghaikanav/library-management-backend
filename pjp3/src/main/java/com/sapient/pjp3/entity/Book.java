@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Books {
+public class Book {
 	private long isbn;
 	private String title;
 	private String author;
