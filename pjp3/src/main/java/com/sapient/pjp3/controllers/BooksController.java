@@ -4,9 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.sapient.pjp3.dao.BookRequestDao;
 import com.sapient.pjp3.dao.BooksDao;
+import com.sapient.pjp3.dao.BooksDaoClass;
 import com.sapient.pjp3.entity.Book;
 import com.sapient.pjp3.entity.BookRequest;
 import com.sapient.pjp3.entity.Login;
+import com.sapient.pjp3.entity.Review;
 import com.sapient.pjp3.utils.JwtUtil;
 
 import org.slf4j.Logger;
@@ -25,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/books")
 public class BooksController {
-    BooksDao dao;
+    BooksDao dao = new BooksDaoClass();
     BookRequestDao dao_;
     @GetMapping("/")
     public List<Book> filterBooks(@RequestParam(defaultValue = "null") String genre,
@@ -69,5 +71,49 @@ public class BooksController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
 		}
 	}
+    
+    @PostMapping("/{id}/comments/")
+    public  ResponseEntity<?> getOrdersForUser(
+			@RequestHeader(name = "Authorization", required = false) String authHeader,
+			@PathVariable("id") long isbn,
+			@RequestBody Review reviewRequest) {
+    	Logger log = LoggerFactory.getLogger(BooksController.class);
+    	log.info("authHeader = {}", authHeader);
+    	
+    	if(authHeader==null) {
+			// Authorization header is missing
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
+		}
+    	try {
+			String token = authHeader.split(" ")[1]; // second element from the header's value
+			log.info("totken = {}", token);
+			Integer userId = JwtUtil.verify(token);
+			
+			reviewRequest.setId(userId + "_" + reviewRequest.getId());
+			reviewRequest.setUser_id(userId);
+			reviewRequest.setIsbn(isbn);
+			
+			log.info(reviewRequest.toString());
+			
+			if(dao.addReview(reviewRequest)) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("success", true);
+				map.put("user_id", userId);
+				return ResponseEntity.ok(map);
+			}
+			else {
+				Map<String, Object> map = new HashMap<>();
+				map.put("failure", true);
+				map.put("user_id", userId);
+				return ResponseEntity.ok(map);
+			}
+			
+			
+		}
+		catch(Exception ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
+		}
+		
+    }
 
 }

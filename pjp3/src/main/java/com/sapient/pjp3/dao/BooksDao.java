@@ -1,6 +1,8 @@
 package com.sapient.pjp3.dao;
 
 import com.sapient.pjp3.entity.Book;
+import com.sapient.pjp3.entity.Review;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +20,8 @@ public interface BooksDao extends CrudRepository<Book,Long> {
 
     @Query("select * from books where lower(title) like lower(:keyword)")
     public List<Book> getBooksByKeyword(@Param("keyword") String keyword);
+    
+    public boolean addReview(Review review) throws Exception;
 
 }
+
