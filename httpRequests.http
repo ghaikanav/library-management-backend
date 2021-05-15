@@ -9,3 +9,16 @@ Content-Type: application/json
     "password": "nVxvMrpU"
 }
 
+
+
+### Add Review
+
+POST /api/books/{isbn}/reviews
+Host: localhost:8080
+Content-Type: application/json
+
+{
+    "issue_id": 202150,
+    "rating": 3,
+    "review": "This is sample review"
+}
