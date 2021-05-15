@@ -32,4 +32,28 @@ public class LoginDao {
 		return null;
 
 	}
+
+
+	public Login updateLogin(String email, int userId) {
+		String sql = "UPDATE LOGIN SET EMAIL = ? WHERE id = ?";
+		Logger log = LoggerFactory.getLogger(BookRequestDao.class);
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+			stmt.setString(1, email);
+			stmt.setInt(2, userId);
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+			rs.next();
+
+			Login u = new Login();
+			u.setId(rs.getInt("id"));
+			u.setEmail(rs.getString("EMAIL"));
+			return u;
+
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+
+	}
 }
