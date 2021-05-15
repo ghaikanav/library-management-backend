@@ -36,6 +36,7 @@ Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUi
 	"rating": 5
 }
 
+
 ### Update book details
 
 PUT /api/books/2834
