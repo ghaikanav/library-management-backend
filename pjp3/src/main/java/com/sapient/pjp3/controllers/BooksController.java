@@ -4,7 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.sapient.pjp3.dao.BookRequestDao;
 import com.sapient.pjp3.dao.BooksDao;
-import com.sapient.pjp3.dao.BooksDaoClass;
+import com.sapient.pjp3.dao.EditBooksDao;
+import com.sapient.pjp3.dao.ReviewDao;
 import com.sapient.pjp3.entity.Book;
 import com.sapient.pjp3.entity.BookRequest;
 import com.sapient.pjp3.entity.Login;
@@ -27,7 +28,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/books")
 public class BooksController {
-    BooksDao dao = new BooksDaoClass();
+    BooksDao dao;
+    EditBooksDao editBooksDao;
     BookRequestDao dao_;
     @GetMapping("/")
     public List<Book> filterBooks(@RequestParam(defaultValue = "null") String genre,
@@ -72,13 +74,15 @@ public class BooksController {
 		}
 	}
     
-    @PostMapping("/{id}/comments/")
+    @PostMapping("/{isbn}/comments/")
     public  ResponseEntity<?> getOrdersForUser(
 			@RequestHeader(name = "Authorization", required = false) String authHeader,
-			@PathVariable("id") long isbn,
+			@PathVariable("isbn") long isbn,
 			@RequestBody Review reviewRequest) {
     	Logger log = LoggerFactory.getLogger(BooksController.class);
     	log.info("authHeader = {}", authHeader);
+    	
+    	ReviewDao reviewDao = new ReviewDao();
     	
     	if(authHeader==null) {
 			// Authorization header is missing
@@ -89,13 +93,13 @@ public class BooksController {
 			log.info("totken = {}", token);
 			Integer userId = JwtUtil.verify(token);
 			
-			reviewRequest.setId(userId + "_" + reviewRequest.getId());
+			reviewRequest.setReview_id(reviewDao.getMaxReviewID() + 1);
 			reviewRequest.setUser_id(userId);
 			reviewRequest.setIsbn(isbn);
 			
 			log.info(reviewRequest.toString());
 			
-			if(dao.addReview(reviewRequest)) {
+			if(reviewDao.addReview(reviewRequest)) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("success", true);
 				map.put("user_id", userId);
@@ -103,7 +107,7 @@ public class BooksController {
 			}
 			else {
 				Map<String, Object> map = new HashMap<>();
-				map.put("failure", true);
+				map.put("success", false);
 				map.put("user_id", userId);
 				return ResponseEntity.ok(map);
 			}
@@ -116,4 +120,66 @@ public class BooksController {
 		
     }
 
+	@PutMapping("/{isbn}/reviews")
+	public ResponseEntity<?> updateReview(
+			@RequestHeader(name = "Authorization", required = false) String authHeader,
+			@RequestBody Review review, @PathVariable int isbn
+	) throws Exception {
+		ReviewDao reviewDao = new ReviewDao();
+		Logger log = LoggerFactory.getLogger(BooksController.class);
+		log.info("authHeader = {}", authHeader);
+		if(authHeader==null) {// Authorization header is missing
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
+		}
+
+		try {
+			String token1 = authHeader.split(" ")[1]; // second element from the header's value
+			log.info("token = {}", token1);
+			Integer userId1 = JwtUtil.verify(token1);
+
+			if(reviewDao.updateReview(review)) {return ResponseEntity.ok().body("Review Successfully Updated"); }
+			else{ return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Review could not be updated"); }
+		}
+		catch(Exception ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
+		}
+	}
+
+
+	@PutMapping("/{bookId}")
+	public ResponseEntity<?> updateBook(
+			@RequestHeader(name = "Authorization", required = false) String authHeader,
+			@RequestBody Book book, @PathVariable int bookId
+	) throws Exception {
+		ReviewDao reviewDao = new ReviewDao();
+		Logger log = LoggerFactory.getLogger(BooksController.class);
+		log.info("authHeader = {}", authHeader);
+		if(authHeader==null) {// Authorization header is missing
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
+		}
+
+		try {
+			String token1 = authHeader.split(" ")[1]; // second element from the header's value
+			log.info("token = {}", token1);
+			Integer userId1 = JwtUtil.verify(token1);
+
+			Book bookResp = editBooksDao.updateBooksDetails(
+					book.getTitle(), book.getAuthor(), book.getPrice(), book.getRating(), book.getQuantity(), bookId);
+			if(bookResp == null){
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book details could not be updated");
+			}
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("isbn", bookResp.getIsbn()); // need to get this from DB using DAO
+			map.put("Title", bookResp.getTitle());
+			map.put("Author", bookResp.getAuthor());
+			map.put("Price", bookResp.getPrice());
+			map.put("Rating", bookResp.getRating());
+			map.put("Quantity", bookResp.getQuantity());
+			return ResponseEntity.ok(map);
+		}
+		catch(Exception ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
+		}
+	}
 }

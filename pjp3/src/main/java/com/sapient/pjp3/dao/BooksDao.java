@@ -20,8 +20,5 @@ public interface BooksDao extends CrudRepository<Book,Long> {
 
     @Query("select * from books where lower(title) like lower(:keyword)")
     public List<Book> getBooksByKeyword(@Param("keyword") String keyword);
-    
-    public boolean addReview(Review review) throws Exception;
-
 }
 
