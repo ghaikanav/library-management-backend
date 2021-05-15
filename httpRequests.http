@@ -22,3 +22,33 @@ Content-Type: application/json
     "rating": 3,
     "review": "This is sample review"
 }
+
+### Edit reviews and rating
+
+PUT /api/books/1000/reviews
+Host: localhost:8080
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
+
+{
+	"isbn": 1000,
+	"review": "For C language programmers, it is must to master the complexity of the language to deal with programming software in engineering, gaming and other fields. In order to understand each concept of the C language, it is necessary to follow a good reference book in easy-to-understand text.",
+	"rating": 5
+}
+
+### Update book details
+
+PUT /api/books/2834
+Host: localhost:8080
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
+
+{
+	"id": 2834,
+	"title": "Let us C - 2019 edition",
+	"author": "Yashwant Kanetkar",
+	"published_date": "2005-02-20",
+	"price": 349.0,
+	"category": "Programming",
+	"quantity": 4
+}
