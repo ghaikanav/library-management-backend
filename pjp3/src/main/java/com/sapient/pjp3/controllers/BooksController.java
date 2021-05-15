@@ -74,7 +74,7 @@ public class BooksController {
 		}
 	}
     
-    @PostMapping("/{isbn}/comments/")
+    @PostMapping("/{isbn}/reviews")
     public  ResponseEntity<?> getOrdersForUser(
 			@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable("isbn") long isbn,
