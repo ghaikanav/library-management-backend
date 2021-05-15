@@ -35,7 +35,7 @@ public class BooksController {
     public List<Book> filterBooks(@RequestParam(defaultValue = "null") String genre,
                                   @RequestParam(defaultValue = "-1") float rating,
                                   @RequestParam(defaultValue = "null") String keyword,
-                                  @RequestBody JWT jwt) throws Exception {
+								  @RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
         List<Book> response = new ArrayList<>();
         if(genre != "null")
             response = dao.getBooksByGenre(genre);
