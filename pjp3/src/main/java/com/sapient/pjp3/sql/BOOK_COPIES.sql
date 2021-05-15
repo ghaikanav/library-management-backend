@@ -1,7 +1,7 @@
 create table BOOK_COPIES (
 	id INT PRIMARY KEY,
 	isbn BIGINT,
-	added_at DATE,
+	added_at VARCHAR(15),
 	is_borrowed BOOLEAN,
 	FOREIGN KEY(isbn) references BOOKS(isbn) 
 

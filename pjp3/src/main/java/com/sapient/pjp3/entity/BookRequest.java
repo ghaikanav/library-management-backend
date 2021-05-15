@@ -11,10 +11,33 @@ import lombok.Data;
 @Data
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BookRequests {
-	private int id;
+public class BookRequest {
 	private int user_id;
 	private String book_title;
+	public int getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+	public String getBook_title() {
+		return book_title;
+	}
+	public void setBook_title(String book_title) {
+		this.book_title = book_title;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public String getRequested_at() {
+		return requested_at;
+	}
+	public void setRequested_at(String requested_at) {
+		this.requested_at = requested_at;
+	}
 	private String author;
-	private Date requested_at;
+	private String requested_at;
 }

@@ -1,9 +1,10 @@
 create table LOGIN (
 	id INT,
-	EMAIL VARCHAR,
-	PASSWORD VARCHAR,
+	EMAIL VARCHAR(100),
+	PASSWORD VARCHAR(50),
 	FOREIGN KEY(id) references USERS(id) 
 );
+
 insert into LOGIN (id, EMAIL, PASSWORD) values (1, 'sandrich0@omniture.com', 'nVxvMrpU');
 insert into LOGIN (id, EMAIL, PASSWORD) values (2, 'fpinchin1@buzzfeed.com', 'OsBtVf4l4');
 insert into LOGIN (id, EMAIL, PASSWORD) values (3, 'goxshott2@nature.com', 'aCQspzaY0');

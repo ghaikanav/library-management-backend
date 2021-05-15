@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Reviews {
+public class Review {
 	private int id;
 	private int issue_id;
 	private int user_id;
