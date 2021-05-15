@@ -1,0 +1,11 @@
+### Login
+
+POST /api/login
+Host: localhost:8080
+Content-Type: application/json
+
+{
+    "email": "sandrich0@omniture.com",
+    "password": "nVxvMrpU"
+}
+
