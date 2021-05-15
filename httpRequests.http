@@ -23,33 +23,59 @@ Content-Type: application/json
     "review": "This is sample review"
 }
 
-### Edit reviews and rating
-
-PUT /api/books/1000/reviews
+### Update book details
+PUT /api/books/8978990000000
 Host: localhost:8080
 Content-Type: application/json
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
 
 {
-	"isbn": 1000,
-	"review": "For C language programmers, it is must to master the complexity of the language to deal with programming software in engineering, gaming and other fields. In order to understand each concept of the C language, it is necessary to follow a good reference book in easy-to-understand text.",
-	"rating": 5
+	"isbn": 8978990000000,
+	"title": "A Storm of Swords: Part 2 Blood and Gold",
+	"author": "George R. R. Martin",
+	"published_date": "22/09/1997",
+	"price": "9.24",
+	"genre": "Science-Fiction-Fantasy-Horror",
+	"rating": 4.48,
+	"quantity": 6,
+	"book_cover": "https://d1w7fb2mkkr3kw.cloudfront.net/assets/images/book/mid/9780/0071/9780007119554.jpg",
+	"total_issues": 27,
+	"publisher": "Westland Publications"
+}
+
+### Edit reviews and rating
+PUT /api/books/202110/reviews
+Host: localhost:8080
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
+
+{
+	"book_id": "202110",
+	"review": "I really enjoyed the book - it does have a sort of ''Gone Girl'' feel, but I liked that book too.  I think the characters are interesting and although I did figure out a portion of the ending, I had to keep reading to see if I was correct.  This was a book club read and I think there is plenty to discuss at our meeting.",
+	"rating": 7
 }
 
 
-### Update book details
-
-PUT /api/books/2834
+### Update user profile
+PUT /api/users/edit/1
 Host: localhost:8080
 Content-Type: application/json
 Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
 
 {
-	"id": 2834,
-	"title": "Let us C - 2019 edition",
-	"author": "Yashwant Kanetkar",
-	"published_date": "2005-02-20",
-	"price": 349.0,
-	"category": "Programming",
-	"quantity": 4
+	"id": 1,
+	"email": "veena@gmail.com"
+}
+
+
+### Updating dues
+PUT  /api/202106/dues
+Host: example.com
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
+
+{
+	"id": 202106,
+	"user_id": 101,
+	"fine_due": 0.00
 }
