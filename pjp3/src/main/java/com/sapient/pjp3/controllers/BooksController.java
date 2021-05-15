@@ -34,8 +34,7 @@ public class BooksController {
     @GetMapping("/")
     public List<Book> filterBooks(@RequestParam(defaultValue = "null") String genre,
                                   @RequestParam(defaultValue = "-1") float rating,
-                                  @RequestParam(defaultValue = "null") String keyword,
-								  @RequestHeader(name = "Authorization", required = false) String authHeader) throws Exception {
+                                  @RequestParam(defaultValue = "null") String keyword) throws Exception {
         List<Book> response = new ArrayList<>();
         if(genre != "null")
             response = dao.getBooksByGenre(genre);
