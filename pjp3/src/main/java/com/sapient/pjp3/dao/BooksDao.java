@@ -16,7 +16,7 @@ public interface BooksDao extends CrudRepository<Book,Long> {
     public List<Book> getBooksByGenre(@Param("genre") String genre);
 
     @Query("select * from books where rating >= :rating")
-    public List<Book> getBooksByRating(@Param("rating")float rating);
+    public List<Book> getBooksByRating(@Param("rating") float rating);
 
     @Query("select * from books where lower(title) like lower(:keyword)")
     public List<Book> getBooksByKeyword(@Param("keyword") String keyword);
