@@ -32,12 +32,12 @@ public class BookRequest {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	public String getRequested_at() {
+	public Date getRequested_at() {
 		return requested_at;
 	}
-	public void setRequested_at(String requested_at) {
+	public void setRequested_at(Date requested_at) {
 		this.requested_at = requested_at;
 	}
 	private String author;
-	private String requested_at;
+	private Date requested_at;
 }
