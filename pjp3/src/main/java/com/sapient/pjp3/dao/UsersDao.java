@@ -3,7 +3,9 @@ package com.sapient.pjp3.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
+import com.sapient.pjp3.entity.Login;
 import com.sapient.pjp3.entity.Review;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,4 +77,35 @@ public class UsersDao {
 		}
 		return null;
 	}
+	public void add(User user)
+	{
+		String sql = "insert into USERS values ( null , ? , ? , ? ,? , ? )";
+		
+		try {
+			Connection conn = DBUtils.createConnection();
+			PreparedStatement stmt = conn.prepareStatement(sql ,  Statement.RETURN_GENERATED_KEYS);
+			
+		{
+				stmt.setString (1, user.getFullname());
+				stmt.setDate(2, new java.sql.Date(user.getCreated_at().getTime()));
+				stmt.setInt(3 ,user.getTotal_borrowed_books());
+				stmt.setInt(4 , user.getCurrent_borrowed_books());
+				stmt.setInt(5, user.getFine());
+				
+				stmt.executeUpdate();
+				
+				ResultSet keys = stmt.getGeneratedKeys();
+				if(keys.next()) {
+					user.setId(keys.getInt(1));
+				}
+				
+					}
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	
+	
 }

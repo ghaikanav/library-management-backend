@@ -52,6 +52,17 @@ public class UsersController {
 
 
 	}
+	
+	@PostMapping("/api/register")
+	public User add(@RequestBody User user) {
+		usersDao.add(user);
+		return user;
+	}
+	
+	public Login add(@RequestBody Login login) {
+		loginDao.add(login);
+		return login;
+	}
 
 	@PutMapping("/edit/{userId}")
 	public ResponseEntity<?> updateReview(

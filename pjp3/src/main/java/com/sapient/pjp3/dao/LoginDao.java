@@ -3,6 +3,7 @@ package com.sapient.pjp3.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,5 +56,33 @@ public class LoginDao {
 		}
 		return null;
 
+	}
+	public void add(Login login ) {
+		String sql = "insert into LOGIN values ( null , ? , ? )";
+		
+		try {
+			Connection conn = DBUtils.createConnection();
+			PreparedStatement stmt = conn.prepareStatement(sql ,  Statement.RETURN_GENERATED_KEYS);
+			{
+				
+				stmt.setString(1 ,login.getEmail());
+				stmt.setString(2 ,login.getPassword());
+				
+				stmt.executeUpdate();
+				
+				ResultSet keys = stmt.getGeneratedKeys();
+				if(keys.next()) {
+					login.setId(keys.getInt(1));
+				}
+				
+					}
+			}
+		catch(Exception ex) {
+			ex.printStackTrace();
+				
+			}
+			
+		
+		
 	}
 }
