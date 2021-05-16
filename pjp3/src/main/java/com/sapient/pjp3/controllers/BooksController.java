@@ -1,27 +1,21 @@
 package com.sapient.pjp3.controllers;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.sapient.pjp3.dao.BookRequestDao;
+
+import com.sapient.pjp3.dao.BookRequestsDao;
 import com.sapient.pjp3.dao.BooksDao;
-import com.sapient.pjp3.dao.EditBooksDao;
-import com.sapient.pjp3.dao.ReviewDao;
+import com.sapient.pjp3.dao.ReviewsDao;
 import com.sapient.pjp3.entity.Book;
 import com.sapient.pjp3.entity.BookRequest;
-import com.sapient.pjp3.entity.Login;
 import com.sapient.pjp3.entity.Review;
 import com.sapient.pjp3.utils.JwtUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -29,22 +23,9 @@ import java.util.Map;
 @RequestMapping("/api/books")
 public class BooksController {
     BooksDao dao;
-    EditBooksDao editBooksDao;
-    BookRequestDao dao_;
-    @GetMapping("/")
-    public List<Book> filterBooks(@RequestParam(defaultValue = "null") String genre,
-                                  @RequestParam(defaultValue = "-1") float rating,
-                                  @RequestParam(defaultValue = "null") String keyword) throws Exception {
-        List<Book> response = new ArrayList<>();
-        if(genre != "null")
-            response = dao.getBooksByGenre(genre);
-        else if(rating != -1)
-            response = dao.getBooksByRating(rating);
-        else if(keyword != "null")
-            response = dao.getBooksByKeyword("%"+keyword+"%");
-        return response;
-    }
-    
+    BooksDao editBooksDao;
+    BookRequestsDao dao_;
+  
     @PostMapping("/request")
     public ResponseEntity<?> getOrdersForUser(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @RequestBody BookRequest request) throws Exception {
@@ -64,7 +45,7 @@ public class BooksController {
 			log.info(request.getBook_title());
 			Map<String, Object> map = new HashMap<>();
 //			BOOK_TITLE, AUTHOR, REQUESTED_AT
-			map.put("success", BookRequestDao.create(userId1,request.getBook_title(),request.getAuthor(),request.getRequested_at()));
+			map.put("success", BookRequestsDao.create(userId1,request.getBook_title(),request.getAuthor(),request.getRequested_at()));
 			map.put("user_id", userId1);
 			return ResponseEntity.ok(map);
 		}
@@ -81,7 +62,7 @@ public class BooksController {
     	Logger log = LoggerFactory.getLogger(BooksController.class);
     	log.info("authHeader = {}", authHeader);
     	
-    	ReviewDao reviewDao = new ReviewDao();
+    	ReviewsDao reviewDao = new ReviewsDao();
     	
     	if(authHeader==null) {
 			// Authorization header is missing
@@ -124,7 +105,7 @@ public class BooksController {
 			@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@RequestBody Review review, @PathVariable int isbn
 	) throws Exception {
-		ReviewDao reviewDao = new ReviewDao();
+		ReviewsDao reviewDao = new ReviewsDao();
 		Logger log = LoggerFactory.getLogger(BooksController.class);
 		log.info("authHeader = {}", authHeader);
 		if(authHeader==null) {// Authorization header is missing
@@ -150,7 +131,7 @@ public class BooksController {
 			@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@RequestBody Book book, @PathVariable int bookId
 	) throws Exception {
-		ReviewDao reviewDao = new ReviewDao();
+		ReviewsDao reviewDao = new ReviewsDao();
 		Logger log = LoggerFactory.getLogger(BooksController.class);
 		log.info("authHeader = {}", authHeader);
 		if(authHeader==null) {// Authorization header is missing

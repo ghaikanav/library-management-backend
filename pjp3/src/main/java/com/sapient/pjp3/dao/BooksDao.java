@@ -1,24 +1,44 @@
 package com.sapient.pjp3.dao;
 
 import com.sapient.pjp3.entity.Book;
-import com.sapient.pjp3.entity.Review;
+import com.sapient.pjp3.utils.DBUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.jpa.repository.Query;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
+public class BooksDao {
 
-import java.util.List;
+	public Book updateBooksDetails(String BOOK_TITLE, String AUTHOR, float PRICE, float RATING, Integer QUANTITY, Integer isbn) {
+		String sql = "UPDATE BOOKS SET TITLE = ?, AUTHOR = ?, PRICE = ?, RATING = ?, QUANTITY = ? WHERE isbn = ?";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+			
+			stmt.setString(1, BOOK_TITLE);
+			stmt.setString(2, AUTHOR);
+			stmt.setDouble(3, PRICE);
+			stmt.setDouble(4, RATING);
+			stmt.setLong(5, QUANTITY);
+			stmt.setLong(6, isbn);
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+			rs.next();
 
-public interface BooksDao extends CrudRepository<Book,Long> {
-
-    @Query("select * from books where genre = :genre")
-    public List<Book> getBooksByGenre(@Param("genre") String genre);
-
-    @Query("select * from books where rating >= :rating")
-    public List<Book> getBooksByRating(@Param("rating") float rating);
-
-    @Query("select * from books where lower(title) like lower(:keyword)")
-    public List<Book> getBooksByKeyword(@Param("keyword") String keyword);
+			Book bookResp = new Book();
+			bookResp.setIsbn(rs.getInt("isbn"));
+			bookResp.setTitle(rs.getString("TITLE"));
+			bookResp.setAuthor(rs.getString("AUTHOR"));
+			bookResp.setPrice(rs.getInt("PRICE"));
+			bookResp.setRating(rs.getFloat("RATING"));
+			bookResp.setQuantity(rs.getInt("QUANTITY"));
+			return bookResp;
+		} 
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
 }
-
