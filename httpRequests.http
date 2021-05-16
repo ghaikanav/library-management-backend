@@ -16,12 +16,12 @@ Content-Type: application/json
 POST /api/books/{isbn}/reviews
 Host: localhost:8080
 Content-Type: application/json
-Authorization: Bearer {JWT Token}
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMTk5NzM2LCJpYXQiOjE2MjExOTYxMzZ9.N_kcZcAbTy1sKv4PUDoBgU4iAejebElHjLr4QXC1bdE
 
 {
-    "issue_id": 202150,
-    "rating": 3,
-    "review": "This is sample review"
+    	"issueId": 202101,
+	"review": "Nice Book!",
+	"rating": 6
 }
 
 ### Update book details
