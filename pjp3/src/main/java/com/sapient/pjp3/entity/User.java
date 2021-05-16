@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 public class User {
-	private int id;
+	private Integer id;
 	private String email;
 	private String password;
 	private String fullname;
-	private Date created_at;
-	private int total_borrowed_books;
-	private int current_borrowed_books;
-	private int fine;
+	private Date createdAt;
+	private Integer totalBorrowedBooks;
+	private Integer currentBorrowedBooks;
+	private Integer fine;
 }

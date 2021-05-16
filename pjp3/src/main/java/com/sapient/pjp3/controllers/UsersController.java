@@ -13,12 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
 	UsersDao usersDao = new UsersDao();
 	
+	@GetMapping("/{id}")
+	public User getUser(@PathVariable Integer id) {
+		return usersDao.getUser(id);
+	}
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody User user) throws Exception {
 		
@@ -38,9 +43,9 @@ public class UsersController {
 	}
 	
 	@PostMapping("/register")
-	public User add(@RequestBody User user) {
-		usersDao.add(user);
+	public User addUser(@RequestBody User user) {
+		usersDao.addUser(user);
 		return user;
 	}
-
+	
 }

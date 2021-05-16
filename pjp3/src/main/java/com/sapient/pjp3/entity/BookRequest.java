@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Data
 public class BookRequest {
-	private int user_id;
-	private String book_title;
-	private String author;
-	private Date requested_at;
+	private Integer bookRequestId;
+	private Integer userId;
+	private String title;
+	private String Author;
+	private Date requestedAt;
 }

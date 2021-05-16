@@ -42,10 +42,10 @@ public class BooksController {
 			Integer userId1 = JwtUtil.verify(token1);
 			
 			log.info("THE returned", userId1);
-			log.info(request.getBook_title());
+			log.info(request.getTitle());
 			Map<String, Object> map = new HashMap<>();
 //			BOOK_TITLE, AUTHOR, REQUESTED_AT
-			map.put("success", BookRequestsDao.create(userId1,request.getBook_title(),request.getAuthor(),request.getRequested_at()));
+			map.put("success", BookRequestsDao.create(userId1,request.getTitle(),request.getAuthor(),request.getRequestedAt()));
 			map.put("user_id", userId1);
 			return ResponseEntity.ok(map);
 		}
@@ -73,8 +73,8 @@ public class BooksController {
 			log.info("totken = {}", token);
 			Integer userId = JwtUtil.verify(token);
 			
-			reviewRequest.setReview_id(reviewDao.getMaxReviewID() + 1);
-			reviewRequest.setUser_id(userId);
+			reviewRequest.setReviewId(reviewDao.getMaxReviewID() + 1);
+			reviewRequest.setUserId(userId);
 			reviewRequest.setIsbn(isbn);
 			
 			log.info(reviewRequest.toString());
@@ -82,13 +82,13 @@ public class BooksController {
 			if(reviewDao.addReview(reviewRequest)) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("success", true);
-				map.put("user_id", userId);
+				map.put("userId", userId);
 				return ResponseEntity.ok(map);
 			}
 			else {
 				Map<String, Object> map = new HashMap<>();
 				map.put("success", false);
-				map.put("user_id", userId);
+				map.put("userId", userId);
 				return ResponseEntity.ok(map);
 			}
 			

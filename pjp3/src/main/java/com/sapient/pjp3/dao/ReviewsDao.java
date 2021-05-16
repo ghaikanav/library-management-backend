@@ -27,9 +27,9 @@ public class ReviewsDao {
 		String sql = "INSERT INTO REVIEWS (ID, ISSUE_ID, USER_ID, BOOK_ID, RATING, REVIEW) VALUES (?, ?, ?, ?, ?, ?)";
 		Logger log = LoggerFactory.getLogger(ReviewsDao.class);
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {		
-			stmt.setInt(1, review.getReview_id());
-			stmt.setInt(2, review.getIssue_id());
-			stmt.setInt(3, review.getUser_id());
+			stmt.setInt(1, review.getReviewId());
+			stmt.setInt(2, review.getIssueId());
+			stmt.setInt(3, review.getUserId());
 			stmt.setLong(4, review.getIsbn());
 			stmt.setInt(5, review.getRating());
 			stmt.setString(6, review.getReview());
@@ -52,7 +52,7 @@ public class ReviewsDao {
 			stmt.setLong(1, review.getRating());
 			stmt.setString(2, review.getReview());
 			stmt.setLong(2, review.getIsbn());
-			stmt.setLong(2, review.getUser_id());
+			stmt.setLong(2, review.getUserId());
 
 			log.info(stmt.toString());
 			ResultSet rs =  stmt.executeQuery();   

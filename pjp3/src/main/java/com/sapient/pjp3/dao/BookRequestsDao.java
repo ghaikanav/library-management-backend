@@ -7,13 +7,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sapient.pjp3.entity.Book;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sapient.pjp3.entity.Book;
 import com.sapient.pjp3.utils.DBUtils;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public class BookRequestsDao {
 	public static Boolean create(Integer userId,String title,String author,Date date) {
@@ -49,15 +47,15 @@ public class BookRequestsDao {
 			do {
 				Book book = new Book();
 				book.setQuantity(rs.getInt("quantity"));
-				book.setBook_cover(rs.getString("book_cover"));
+				book.setBookCover(rs.getString("bookCover"));
 				book.setAuthor(rs.getString("author"));
 				book.setGenre(rs.getString("genre"));
 				book.setIsbn(rs.getLong("isbn"));
-				book.setPrice(rs.getFloat("price"));
-				book.setPublished_date(rs.getDate("published_date"));
-				book.setRating(rs.getFloat("rating"));
+				book.setPrice(rs.getDouble("price"));
+				book.setPublishedDate(rs.getDate("publishedDate"));
+				book.setRating(rs.getDouble("rating"));
 				book.setPublisher(rs.getString("publisher"));
-				book.setTotal_issues(rs.getInt("total_issues"));
+				book.setTotalIssues(rs.getInt("totalIssues"));
 				book.setTitle(rs.getString("title"));
 				books.add(book);
 			} while(rs.next());
