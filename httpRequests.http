@@ -1,4 +1,4 @@
-### Login
+### Login (tested)
 
 POST /api/login
 Host: localhost:8080
@@ -11,7 +11,7 @@ Content-Type: application/json
 
 
 
-### Add Review
+### Add Review (tested)
 
 POST /api/books/{isbn}/reviews
 Host: localhost:8080
