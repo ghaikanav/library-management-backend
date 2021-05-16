@@ -16,6 +16,7 @@ Content-Type: application/json
 POST /api/books/{isbn}/reviews
 Host: localhost:8080
 Content-Type: application/json
+Authorization: Bearer {JWT Token}
 
 {
     "issue_id": 202150,
