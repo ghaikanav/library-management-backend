@@ -51,7 +51,7 @@ public class ReviewsDao {
 	}
 	
 	public boolean updateReview(Review review) {
-		String sql = "UPDATE REVIEWS SET rating = ?, review = ? WHERE isbn = ? AND reviewId = ?";
+		String sql = "UPDATE reviews SET rating = ?, review = ? WHERE isbn = ? AND reviewId = ?";
 		Logger log = LoggerFactory.getLogger(ReviewsDao.class);
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {		
 			stmt.setInt(1, review.getRating());
@@ -60,8 +60,8 @@ public class ReviewsDao {
 			stmt.setInt(4, review.getReviewId());
 
 			log.info(stmt.toString());
-			ResultSet rs =  stmt.executeQuery();   
-			rs.next();
+			stmt.executeUpdate();  
+			
 			return true;
 		} 
 		catch (Exception ex) {

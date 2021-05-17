@@ -35,16 +35,21 @@ public class BookRequestsDao {
 
 
 	public List<Book> getBooksByKeyword(String keyword) {
-		String sql = "SELECT * FROM BOOKS WHERE LOWER(TITLE) LIKE LOWER(?)";
+		String sql = "SELECT * FROM books WHERE LOWER(title) LIKE ? UNION "+ 
+				"SELECT * FROM books WHERE LOWER(author) LIKE ? UNION "
+				+ "SELECT * FROM books WHERE LOWER(genre) LIKE ? ORDER BY rating DESC";
+				
 		Logger log = LoggerFactory.getLogger(BookRequestsDao.class);
 		List<Book> books = new ArrayList<>();
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
 
-			stmt.setString(1, "%"+keyword+"%");
+			stmt.setString(1, "%"+keyword.toLowerCase()+"%");
+			stmt.setString(2, "%"+keyword.toLowerCase()+"%");
+			stmt.setString(3, "%"+keyword.toLowerCase()+"%");
 			log.info(conn.toString());
 			log.info(stmt.toString());
 			ResultSet rs = stmt.executeQuery();
-			do {
+			while(rs.next()) {
 				Book book = new Book();
 				book.setQuantity(rs.getInt("quantity"));
 				book.setBookCover(rs.getString("bookCover"));
@@ -58,12 +63,14 @@ public class BookRequestsDao {
 				book.setTotalIssues(rs.getInt("totalIssues"));
 				book.setTitle(rs.getString("title"));
 				books.add(book);
-			} while(rs.next());
+			} 
+			
+			return books;
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 			return null;
 		}
-		return books;
+	
 	}
 }

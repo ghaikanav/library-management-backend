@@ -40,7 +40,7 @@ public class BooksController {
     	return ResponseEntity.ok(map);
     }
     
-    @GetMapping("/genre{genre}")
+    @GetMapping("/genre/{genre}")
     public ResponseEntity<?> getBooksByGenre(@PathVariable String genre)
     {
     	BooksDao booksDao = new BooksDao();
@@ -100,7 +100,7 @@ public class BooksController {
 	}
     
     @PostMapping("/{isbn}/reviews")
-    public  ResponseEntity<?> getOrdersForUser(
+    public  ResponseEntity<?> postReview(
 			@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable("isbn") long isbn,
 			@RequestBody Review reviewRequest) {
@@ -140,10 +140,10 @@ public class BooksController {
 		
     }
 
-	@PutMapping("/{isbn}/reviews")
+	@PutMapping("/{isbn}/reviews/{reviewId}")
 	public ResponseEntity<?> updateReview(
 			@RequestHeader(name = "Authorization", required = false) String authHeader,
-			@RequestBody Review review, @PathVariable int isbn
+			@RequestBody Review review, @PathVariable long isbn, @PathVariable int reviewId
 	) throws Exception {
 		ReviewsDao reviewDao = new ReviewsDao();
 		Logger log = LoggerFactory.getLogger(BooksController.class);
@@ -156,14 +156,34 @@ public class BooksController {
 			String token1 = authHeader.split(" ")[1]; // second element from the header's value
 			log.info("token = {}", token1);
 			Integer userId1 = JwtUtil.verify(token1);
-
-			if(reviewDao.updateReview(review)) {return ResponseEntity.ok().body("Review Successfully Updated"); }
+			
+			review.setReviewId(reviewId);
+			review.setUserId(userId1);
+			review.setIsbn(isbn);
+			if(reviewDao.updateReview(review)) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("success", true);
+				map.put("review",review);
+				return ResponseEntity.ok(map); 
+			}
+			
 			else{ return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Review could not be updated"); }
 		}
 		catch(Exception ex) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
 		}
 	}
+	
+	@GetMapping("/search/{keyword}")
+	public ResponseEntity<?> getBooksByKeyword(@PathVariable String keyword)
+    {
+    	BookRequestsDao bookRequestsDao = new BookRequestsDao();
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("keyword", keyword);
+    	map.put("TheListOfBooks", bookRequestsDao.getBooksByKeyword(keyword));
+    	
+    	return ResponseEntity.ok(map);
+    }
 
 
 }
