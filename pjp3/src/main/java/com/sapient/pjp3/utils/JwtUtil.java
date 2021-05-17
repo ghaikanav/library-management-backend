@@ -25,7 +25,7 @@ public class JwtUtil {
 					.withSubject(fullname)
 					.withClaim("id", userId)
 					.withIssuedAt(new Date())
-					.withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
+					.withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
 					.sign(algorithm);
 			
 		} catch (Exception ex) {

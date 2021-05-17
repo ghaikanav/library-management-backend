@@ -86,21 +86,32 @@ public class UsersDao {
 		return null;
 	}
 
-	public User updateDueAmount(int userId, int fine) {
-		String sql = "UPDATE USERS SET FINE = ? WHERE id = ?";
+	public User payFine(int userId) {
+		String sql = "UPDATE USERS SET FINE = 0.0 where id = ? ";
 		Logger log = LoggerFactory.getLogger(BookRequestsDao.class);
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
-			stmt.setLong(1, fine);
-			stmt.setLong(2, userId);
 			log.info(stmt.toString());
-			ResultSet rs =  stmt.executeQuery();
-			rs.next();
+			stmt.setInt(1, userId);
+			stmt.executeUpdate();
+			
+			payFineAtAllIssues(userId);
+			
+			return getUser(userId);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	public User payFineAtAllIssues(int userId) {
+		String sql = "UPDATE book_issues SET fineDue = 0.0, isFinePaid = 1 where userId = ? ";
+		Logger log = LoggerFactory.getLogger(BookRequestsDao.class);
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+			log.info(stmt.toString());
+			stmt.setInt(1, userId);
+			stmt.executeUpdate();
 
-			User responseUser = new User();
-			responseUser.setId(rs.getInt("id"));
-			responseUser.setFullname(rs.getString("FULL_NAME"));
-			responseUser.setFine(rs.getInt("FINE"));
-			return responseUser;
+			return getUser(userId);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -108,8 +119,12 @@ public class UsersDao {
 		return null;
 	}
 	
-	public User addUser(User user)
+	public int addUser(User user)
 	{
+		if(getUserByEmail(user.getEmail())!=null) {
+			return -1;
+		}
+			
 		String sql = "insert into USERS values (? , ? , ?, ? , curdate() , 0 , 0 , 0 )";
 		
 		try (Connection conn = DBUtils.createConnection();
@@ -120,7 +135,7 @@ public class UsersDao {
 			stmt.setString(3, user.getPassword());
 			stmt.setString (4, user.getFullname());
 			
-			stmt.executeUpdate();   
+			return stmt.executeUpdate();   
 			
 			
 		}
@@ -128,7 +143,7 @@ public class UsersDao {
 			ex.printStackTrace();
 		}
 		
-		return null;
+		return -1;
 	}
 	
 	public int getMaxId() {

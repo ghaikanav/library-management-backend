@@ -23,36 +23,41 @@ public class ReviewsDao {
 		return rs.getInt(1);
 	}
 	
-	public boolean addReview(Review review) {
-		String sql = "INSERT INTO REVIEWS (ID, ISSUE_ID, USER_ID, BOOK_ID, RATING, REVIEW) VALUES (?, ?, ?, ?, ?, ?)";
+	public void addReview(Review review) {
+		String sql = "INSERT INTO REVIEWS (issueId, userId, isbn, rating, review) VALUES (?, ?, ?, ?, ?)";
 		Logger log = LoggerFactory.getLogger(ReviewsDao.class);
-		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {		
-			stmt.setInt(1, review.getReviewId());
-			stmt.setInt(2, review.getIssueId());
-			stmt.setInt(3, review.getUserId());
-			stmt.setLong(4, review.getIsbn());
-			stmt.setInt(5, review.getRating());
-			stmt.setString(6, review.getReview());
+		try (Connection conn = DBUtils.createConnection(); 
+				PreparedStatement stmt = conn.prepareStatement(sql);) {		
+			//stmt.setInt(1, review.getReviewId());
+			if(review.getIssueId()!=null)
+				stmt.setInt(1, review.getIssueId());
+			else
+				stmt.setInt(1, 202101);//default value for issueId
+			
+			stmt.setInt(2, review.getUserId());
+			stmt.setLong(3, review.getIsbn());
+			stmt.setInt(4, review.getRating());
+			stmt.setString(5, review.getReview());
 
 			log.info(stmt.toString());
 			
-			stmt.execute();
+			stmt.executeUpdate();
+			
 		} 
 		catch (Exception ex) {
 			ex.printStackTrace();
-			return false;
+			
 		}
-		return true;
 	}
 	
 	public boolean updateReview(Review review) {
-		String sql = "UPDATE REVIEWS SET RATING = ?, REVIEW = ? WHERE BOOK_ID = ? AND USER_ID = ?";
+		String sql = "UPDATE REVIEWS SET rating = ?, review = ? WHERE isbn = ? AND reviewId = ?";
 		Logger log = LoggerFactory.getLogger(ReviewsDao.class);
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {		
-			stmt.setLong(1, review.getRating());
+			stmt.setInt(1, review.getRating());
 			stmt.setString(2, review.getReview());
-			stmt.setLong(2, review.getIsbn());
-			stmt.setLong(2, review.getUserId());
+			stmt.setLong(3, review.getIsbn());
+			stmt.setInt(4, review.getReviewId());
 
 			log.info(stmt.toString());
 			ResultSet rs =  stmt.executeQuery();   

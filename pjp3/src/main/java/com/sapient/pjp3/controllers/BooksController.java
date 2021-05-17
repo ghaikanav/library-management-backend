@@ -15,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -25,6 +27,49 @@ public class BooksController {
     BooksDao dao;
     BooksDao editBooksDao;
     BookRequestsDao dao_;
+    
+    @GetMapping("{filter}/{order}")
+    public ResponseEntity<?> getBooksByFilter(@PathVariable String filter, @PathVariable String order)
+    {
+    	BooksDao booksDao = new BooksDao();
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("Filter", filter);
+    	map.put("Order", order);
+    	map.put("TheListOfBooks", booksDao.orderBooksByFilter(filter,order));
+    	
+    	return ResponseEntity.ok(map);
+    }
+    
+    @GetMapping("/genre{genre}")
+    public ResponseEntity<?> getBooksByGenre(@PathVariable String genre)
+    {
+    	BooksDao booksDao = new BooksDao();
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("Genre", genre);
+    	map.put("ListOfBooks", booksDao.getBooksByGenre(genre));
+    	
+    	return ResponseEntity.ok(map);
+    }
+    
+    @GetMapping("/genre")
+    public ResponseEntity<?> getAllGenres()
+    {
+    	BooksDao booksDao = new BooksDao();
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("ListOfGenres", booksDao.getAllGenres());
+    	
+    	return ResponseEntity.ok(map);
+    }
+    
+    @GetMapping("/{isbn}")
+    public ResponseEntity<?> getAllGenres(@PathVariable Long isbn)
+    {
+    	BooksDao booksDao = new BooksDao();
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("Book", booksDao.getBookByIsbn(isbn));
+    	
+    	return ResponseEntity.ok(map);
+    }
   
     @PostMapping("/request")
     public ResponseEntity<?> getOrdersForUser(
@@ -38,7 +83,7 @@ public class BooksController {
 		
 		try {
 			String token1 = authHeader.split(" ")[1]; // second element from the header's value
-			log.info("totken = {}", token1);
+			log.info("token = {}", token1);
 			Integer userId1 = JwtUtil.verify(token1);
 			
 			log.info("THE returned", userId1);
@@ -73,25 +118,20 @@ public class BooksController {
 			log.info("totken = {}", token);
 			Integer userId = JwtUtil.verify(token);
 			
-			reviewRequest.setReviewId(reviewDao.getMaxReviewID() + 1);
+			//reviewRequest.setReviewId(reviewDao.getMaxReviewID() + 1);
 			reviewRequest.setUserId(userId);
 			reviewRequest.setIsbn(isbn);
-			
+	
 			log.info(reviewRequest.toString());
 			
-			if(reviewDao.addReview(reviewRequest)) {
-				Map<String, Object> map = new HashMap<>();
-				map.put("success", true);
-				map.put("userId", userId);
-				return ResponseEntity.ok(map);
-			}
-			else {
-				Map<String, Object> map = new HashMap<>();
-				map.put("success", false);
-				map.put("userId", userId);
-				return ResponseEntity.ok(map);
-			}
+			reviewDao.addReview(reviewRequest);
 			
+			Map<String, Object> map = new HashMap<>();
+			map.put("success", true);
+			map.put("userId", userId);
+			map.put("review", reviewRequest.getReview());
+			map.put("rating", reviewRequest.getRating());			
+			return ResponseEntity.ok(map);	
 			
 		}
 		catch(Exception ex) {
@@ -126,40 +166,4 @@ public class BooksController {
 	}
 
 
-	@PutMapping("/{bookId}")
-	public ResponseEntity<?> updateBook(
-			@RequestHeader(name = "Authorization", required = false) String authHeader,
-			@RequestBody Book book, @PathVariable int bookId
-	) throws Exception {
-		ReviewsDao reviewDao = new ReviewsDao();
-		Logger log = LoggerFactory.getLogger(BooksController.class);
-		log.info("authHeader = {}", authHeader);
-		if(authHeader==null) {// Authorization header is missing
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
-		}
-
-		try {
-			String token1 = authHeader.split(" ")[1]; // second element from the header's value
-			log.info("token = {}", token1);
-			Integer userId1 = JwtUtil.verify(token1);
-
-			Book bookResp = editBooksDao.updateBooksDetails(
-					book.getTitle(), book.getAuthor(), book.getPrice(), book.getRating(), book.getQuantity(), bookId);
-			if(bookResp == null){
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book details could not be updated");
-			}
-			
-			Map<String, Object> map = new HashMap<>();
-			map.put("isbn", bookResp.getIsbn()); // need to get this from DB using DAO
-			map.put("Title", bookResp.getTitle());
-			map.put("Author", bookResp.getAuthor());
-			map.put("Price", bookResp.getPrice());
-			map.put("Rating", bookResp.getRating());
-			map.put("Quantity", bookResp.getQuantity());
-			return ResponseEntity.ok(map);
-		}
-		catch(Exception ex) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
-		}
-	}
 }
