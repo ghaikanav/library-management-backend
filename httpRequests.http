@@ -68,6 +68,17 @@ Host: localhost:8080
 Accept: application/json
 Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMjM2Nzg2LCJpYXQiOjE2MjEyMzMxODZ9.3PRDFB_rFeD-WamOZgm-y1H2axvcke_-Xsx9vd2lX1k
 
+### request book (tested)
+GET  /api/books/request	
+Host: localhost:8080
+Accept: application/json
+Authorization: "Auth token from login"
+
+{
+	"title" : "title",
+	"Author" : "author"
+}
+
 
 ### Update book details
 PUT /api/books/8978990000000
