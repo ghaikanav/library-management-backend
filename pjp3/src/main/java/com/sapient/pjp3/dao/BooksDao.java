@@ -157,4 +157,45 @@ public class BooksDao {
 		}
 		return null;
 	}
+
+	public Book borrowBook(Long isbn) {
+		String sql = "Select * from book_copies where isbn = ? AND isBorrowed = 0 limit 1 ";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+		
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+	
+			stmt.setLong(1, isbn);
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+			
+			if(rs.next()) {
+				updateBookCopiesTable(rs.getInt("bookId"));
+				return getBookByIsbn(isbn);
+			}
+			
+			
+			
+		} catch (Exception ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	private void updateBookCopiesTable(int bookId) {
+		String sql = "UPDATE book_copies SET isBorrowed = 1 where bookId = ? ";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+		
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+	
+			stmt.setInt(1, bookId);
+			log.info(stmt.toString());
+			stmt.executeUpdate();
+			
+		} catch (Exception ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		return;
+	}
 }
