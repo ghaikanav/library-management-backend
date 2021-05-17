@@ -4,7 +4,14 @@ GET  /api/books/{isbn}
 Host: localhost:8080
 Accept: application/json
 
+### Get a specific book's review and rating
+
+GET  /api/books/8283310000000/reviews
+Host: localhost:8080
+Accept: application/json
+
 ### search books by keyword (tested)
+
 GET  /api/books/search/{keyword}
 Host: localhost:8080
 Accept: application/json
@@ -24,11 +31,6 @@ Accept: application/json
 ### Get books sorted by filter and order(desc/asc) (tested)
 
 GET  /api/books/{filter}/{order}
-Host: localhost:8080
-Accept: application/json
-
-### Borrrow a book
-GET  /api/books/{isbn}/borrow
 Host: localhost:8080
 Accept: application/json
 
@@ -56,7 +58,6 @@ Content-Type: application/json
 }
 
 
-
 ### Add Review (tested)
 
 POST /api/books/{isbn}/reviews
@@ -70,6 +71,18 @@ Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBp
 	"rating": 6
 }
 
+### Edit reviews and rating (tested)
+
+PUT /api/books/{isbn}/reviews/{reviewId}
+Host: localhost:8080
+Content-Type: application/json
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMjUyNTMyLCJpYXQiOjE2MjEyNDg5MzJ9.qHJe-D-NVo1QR-cIseyiJ4bnTtkBK_o5kTidwlJQQn8
+
+{
+	"review": "All of us really enjoyed the book - it does have a sort of ''Gone Girl'' feel, but I liked that book too.  I think the characters are interesting and although I did figure out a portion of the ending, I had to keep reading to see if I was correct.  This was a book club read and I think there is plenty to discuss at our meeting.",
+	"rating": 7
+}
+
 ### Pay fine (tested)
 
 GET  /api/users/payFine
@@ -78,6 +91,7 @@ Accept: application/json
 Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMjM2Nzg2LCJpYXQiOjE2MjEyMzMxODZ9.3PRDFB_rFeD-WamOZgm-y1H2axvcke_-Xsx9vd2lX1k
 
 ### Request book (tested)
+
 POST  /api/books/request	
 Host: localhost:8080
 Content-Type: application/json
@@ -88,16 +102,11 @@ Authorization: "Auth token from login"
 	"author" : "some author"
 }
 
-### Edit reviews and rating (tested)
-PUT /api/books/{isbn}/reviews/{reviewId}
-Host: localhost:8080
-Content-Type: application/json
-Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMjUyNTMyLCJpYXQiOjE2MjEyNDg5MzJ9.qHJe-D-NVo1QR-cIseyiJ4bnTtkBK_o5kTidwlJQQn8
+### Borrrow a book
 
-{
-	"review": "All of us really enjoyed the book - it does have a sort of ''Gone Girl'' feel, but I liked that book too.  I think the characters are interesting and although I did figure out a portion of the ending, I had to keep reading to see if I was correct.  This was a book club read and I think there is plenty to discuss at our meeting.",
-	"rating": 7
-}
+GET  /api/books/{isbn}/borrow
+Host: localhost:8080
+Accept: application/json
 
 ### display previously borrowed books (tested)
 
