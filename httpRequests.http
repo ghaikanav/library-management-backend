@@ -1,3 +1,9 @@
+### Get books by genre (tested)
+
+GET  /api/books/Medical
+Host: localhost:8080
+Accept: application/json
+
 ### Login (tested)
 
 POST /api/login
