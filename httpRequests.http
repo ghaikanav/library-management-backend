@@ -99,4 +99,12 @@ Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBp
 	"rating": 7
 }
 
+### display previously borrowed books (tested)
+
+GET  /api/users/borrowedBooks
+Host: localhost:8080
+Accept: application/json
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMjc0ODQ5LCJpYXQiOjE2MjEyNzEyNDl9.gP8bXGB9Sswiu9ylngbHgGSe8QhqZLxbpFIEr2kFzdI
+
+
 
