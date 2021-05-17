@@ -72,7 +72,7 @@ Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBp
 POST  /api/books/request	
 Host: localhost:8080
 Content-Type: application/json
-Accept: application/json
+
 Authorization: "Auth token from login"
 
 {
