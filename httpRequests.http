@@ -79,6 +79,17 @@ Authorization: "Auth token from login"
 	"author" : "some author"
 }
 
+### Edit reviews and rating (tested)
+PUT /api/books/{isbn}/reviews/{reviewId}
+Host: localhost:8080
+Content-Type: application/json
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMjUyNTMyLCJpYXQiOjE2MjEyNDg5MzJ9.qHJe-D-NVo1QR-cIseyiJ4bnTtkBK_o5kTidwlJQQn8
+
+{
+	"review": "All of us really enjoyed the book - it does have a sort of ''Gone Girl'' feel, but I liked that book too.  I think the characters are interesting and although I did figure out a portion of the ending, I had to keep reading to see if I was correct.  This was a book club read and I think there is plenty to discuss at our meeting.",
+	"rating": 7
+}
+
 
 ### Update book details
 PUT /api/books/8978990000000
@@ -99,19 +110,6 @@ Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUi
 	"total_issues": 27,
 	"publisher": "Westland Publications"
 }
-
-### Edit reviews and rating
-PUT /api/books/202110/reviews
-Host: localhost:8080
-Content-Type: application/json
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
-
-{
-	"book_id": "202110",
-	"review": "I really enjoyed the book - it does have a sort of ''Gone Girl'' feel, but I liked that book too.  I think the characters are interesting and although I did figure out a portion of the ending, I had to keep reading to see if I was correct.  This was a book club read and I think there is plenty to discuss at our meeting.",
-	"rating": 7
-}
-
 
 ### Update user profile
 PUT /api/users/edit/1
