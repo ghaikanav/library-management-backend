@@ -100,34 +100,3 @@ Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBp
 }
 
 
-### Update book details
-PUT /api/books/8978990000000
-Host: localhost:8080
-Content-Type: application/json
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
-
-{
-	"isbn": 8978990000000,
-	"title": "A Storm of Swords: Part 2 Blood and Gold",
-	"author": "George R. R. Martin",
-	"published_date": "22/09/1997",
-	"price": "9.24",
-	"genre": "Science-Fiction-Fantasy-Horror",
-	"rating": 4.48,
-	"quantity": 6,
-	"book_cover": "https://d1w7fb2mkkr3kw.cloudfront.net/assets/images/book/mid/9780/0071/9780007119554.jpg",
-	"total_issues": 27,
-	"publisher": "Westland Publications"
-}
-
-### Update user profile
-PUT /api/users/edit/1
-Host: localhost:8080
-Content-Type: application/json
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
-
-{
-	"id": 1,
-	"email": "veena@gmail.com"
-}
-
