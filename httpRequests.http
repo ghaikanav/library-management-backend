@@ -4,7 +4,7 @@ GET  /api/books/{isbn}
 Host: localhost:8080
 Accept: application/json
 
-### search books by keyword
+### search books by keyword (tested)
 GET  /api/books/search/{keyword}
 Host: localhost:8080
 Accept: application/json
