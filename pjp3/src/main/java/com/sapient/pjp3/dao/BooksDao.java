@@ -257,4 +257,31 @@ public class BooksDao {
 		}
 		return;
 	}
+
+	public List<Book> getPreviousBooks(Integer userId) {
+		List<Book> books = new ArrayList<>();
+		
+		String sql = "SELECT * from books,book_issues where books.isbn = book_issues.isbn AND userId = ?";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+		
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+	
+			stmt.setInt(1, userId);
+
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+			
+			while(rs.next()) {
+				books.add(resultSetToBook(rs));
+			}
+			
+			return books;
+			
+		} catch (Exception ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		return null;
+		
+	}
 }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.sapient.pjp3.dao.BookRequestsDao;
+import com.sapient.pjp3.dao.BooksDao;
 import com.sapient.pjp3.dao.UsersDao;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RequestMapping("/api/users")
 public class UsersController {
 	UsersDao usersDao = new UsersDao();
+	BooksDao booksDao = new BooksDao();
 	
 	@GetMapping
 	public ResponseEntity<?> getUser(@RequestHeader(name = "Authorization", required = false) String authHeader) {
@@ -39,6 +41,31 @@ public class UsersController {
 			log.info("THE returned", userId);
 			Map<String, Object> map = new HashMap<>();
 			map.put("success", usersDao.getUser(userId));//lets see
+			map.put("user_id", userId);
+			return ResponseEntity.ok(map);
+		}
+		catch(Exception ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
+		}
+		
+	}
+	
+	@GetMapping("/borrowedBooks")
+	public ResponseEntity<?> getPreviousBooks(@RequestHeader(name = "Authorization", required = false) String authHeader) {
+		Logger log = LoggerFactory.getLogger(BooksController.class);
+		log.info("authHeader = {}", authHeader);
+		if(authHeader==null) {
+			// Authorization header is missing
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
+		}
+		try {
+			String token1 = authHeader.split(" ")[1]; // second element from the header's value
+			log.info("token = {}", token1);
+			Integer userId = JwtUtil.verify(token1);
+			
+			log.info("THE returned", userId);
+			Map<String, Object> map = new HashMap<>();
+			map.put("success", booksDao.getPreviousBooks(userId));//lets see
 			map.put("user_id", userId);
 			return ResponseEntity.ok(map);
 		}

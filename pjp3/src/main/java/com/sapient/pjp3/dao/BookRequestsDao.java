@@ -43,9 +43,9 @@ public class BookRequestsDao {
 		List<Book> books = new ArrayList<>();
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
 
-			stmt.setString(1, "%"+keyword.toLowerCase()+"%");
+			stmt.setString(1, "%" + keyword.toLowerCase()+"%");
 			stmt.setString(2, "%"+keyword.toLowerCase()+"%");
-			stmt.setString(3, "%"+keyword.toLowerCase()+"%");
+			stmt.setString(3, keyword.toLowerCase()+"%");
 			log.info(conn.toString());
 			log.info(stmt.toString());
 			ResultSet rs = stmt.executeQuery();
