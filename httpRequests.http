@@ -9,6 +9,18 @@ Content-Type: application/json
     "password": "nVxvMrpU"
 }
 
+### register a new user (tested)
+
+POST /api/users/register
+Host: localhost:8080
+Content-Type: application/json
+
+{
+    "email": "ghaiK9@gmail.com",
+    "password": "mysql",
+    "fullname": "Kanav Ghai"
+}
+
 
 
 ### Add Review (tested)
