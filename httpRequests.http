@@ -27,6 +27,10 @@ GET  /api/books/{filter}/{order}
 Host: localhost:8080
 Accept: application/json
 
+### Borrrow a book
+GET  /api/books/{isbn}/borrow
+Host: localhost:8080
+Accept: application/json
 
 ### Login (tested)
 
