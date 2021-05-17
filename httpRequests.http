@@ -1,3 +1,9 @@
+### Get a specific book (tested)
+
+GET  /api/books/{isbn} 
+Host: localhost:8080
+Accept: application/json
+
 ### Get all genres (tested)
 
 GET  /api/books/genre
@@ -6,7 +12,7 @@ Accept: application/json
 
 ### Get books by genre (tested)
 
-GET  /api/books/Medical
+GET  /api/books/genre/{genre}
 Host: localhost:8080
 Accept: application/json
 
