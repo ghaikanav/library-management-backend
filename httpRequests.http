@@ -6,7 +6,7 @@ Accept: application/json
 
 ### Get a specific book's review and rating
 
-GET  /api/books/8283310000000/reviews
+GET  /api/books/{isbn}/reviews
 Host: localhost:8080
 Accept: application/json
 
