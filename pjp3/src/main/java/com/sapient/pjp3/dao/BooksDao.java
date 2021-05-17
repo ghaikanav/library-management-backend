@@ -10,6 +10,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +159,7 @@ public class BooksDao {
 		return null;
 	}
 
-	public Book borrowBook(Long isbn) {
+	public Book borrowBook(Long isbn, Integer userId) {
 		String sql = "Select * from book_copies where isbn = ? AND isBorrowed = 0 limit 1 ";
 		Logger log = LoggerFactory.getLogger(BooksDao.class);
 		
@@ -170,6 +171,8 @@ public class BooksDao {
 			
 			if(rs.next()) {
 				updateBookCopiesTable(rs.getInt("bookId"));
+				updateBookIssuesTable(rs.getInt("bookId"), userId, isbn);
+				updateBooksTable(isbn);
 				return getBookByIsbn(isbn);
 			}
 			
@@ -180,6 +183,62 @@ public class BooksDao {
 			ex.printStackTrace();
 		}
 		return null;
+	}
+
+	private void updateBooksTable(Long isbn) {
+		String sql = "UPDATE books SET totalIssues = totalIssues + 1 WHERE isbn = ?";
+		try (Connection conn = DBUtils.createConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql ,  Statement.RETURN_GENERATED_KEYS);) {		
+			stmt.setLong(1, isbn);
+			stmt.executeUpdate();   
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return ;
+		
+	}
+
+	private void updateBookIssuesTable(Integer bookId, Integer userId, Long isbn) {
+		String sql = "INSERT into book_issues(bookId, userId, isbn, bookIssueId, fineDue, isFinePaid) "
+				+ "VALUES(?, ?, ?, ?, 0, 0) ";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+		
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+	
+			stmt.setInt(1, bookId);
+			stmt.setInt(2, userId);
+			stmt.setLong(3, isbn);
+			stmt.setInt(4, getMaxBookIssueId() + 1);
+			log.info(stmt.toString());
+			stmt.executeUpdate();
+			
+		} catch (Exception ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		return;
+		
+	}
+
+	private int getMaxBookIssueId() {
+		String sql = "SELECT MAX(bookIssueId) as maxi from book_issues";
+		try (Connection conn = DBUtils.createConnection();
+				PreparedStatement stmt = conn.prepareStatement(sql ,  Statement.RETURN_GENERATED_KEYS);) {		
+				
+			ResultSet rs =  stmt.executeQuery();   
+			if(rs.next()) {
+				return rs.getInt("maxi");
+			}
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return 0;
 	}
 
 	private void updateBookCopiesTable(int bookId) {

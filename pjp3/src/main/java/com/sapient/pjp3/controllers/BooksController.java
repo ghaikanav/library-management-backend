@@ -73,13 +73,30 @@ public class BooksController {
     
     @GetMapping("/{isbn}/borrow")
     public ResponseEntity<?> borrowBook(@RequestHeader(name = "Authorization", required = false) String authHeader, 
-    		@PathVariable Long isbn)
-    {
-    	BooksDao booksDao = new BooksDao();
-    	Map<String, Object> map = new HashMap<>();
-    	map.put("Book", booksDao.borrowBook(isbn));
+    		@PathVariable Long isbn){
+    	Logger log = LoggerFactory.getLogger(BooksController.class);
+		log.info("authHeader = {}", authHeader);
+    	if(authHeader==null) {
+			// Authorization header is missing
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
+		}
     	
-    	return ResponseEntity.ok(map);
+    	try {
+			String token1 = authHeader.split(" ")[1]; // second element from the header's value
+			log.info("token = {}", token1);
+			Integer userId1 = JwtUtil.verify(token1);
+			
+			log.info("THE returned", userId1);
+			BooksDao booksDao = new BooksDao();
+	    	Map<String, Object> map = new HashMap<>();
+	    	
+	    	map.put("Book", booksDao.borrowBook(isbn, userId1));
+			return ResponseEntity.ok(map);
+		}
+		catch(Exception ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
+		}
+    
     }
   
     @PostMapping("/request")
