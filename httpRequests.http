@@ -80,15 +80,9 @@ Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUi
 	"email": "veena@gmail.com"
 }
 
+### Pay fine
+GET  /api/users/payFine
+Host: localhost:8080
+Accept: application/json
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMjM2Nzg2LCJpYXQiOjE2MjEyMzMxODZ9.3PRDFB_rFeD-WamOZgm-y1H2axvcke_-Xsx9vd2lX1k
 
-### Updating dues
-PUT  /api/202106/dues
-Host: example.com
-Content-Type: application/json
-Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgzNCwidGl0bGUiOiJMZXQgdXMgQyAtIDIwMTkgZWRpdGlvbiIsImF1dGhvciI6Illhc2h3YW50IEthbmV0a2FyIiwicHVibGlzaGVkX2RhdGUiOiIyMDA1LTAyLTIwIiwicHJpY2UiOjM0OSwiY2F0ZWdvcnkiOiJQcm9ncmFtbWluZyIsInF1YW50aXR5Ijo0fQ.Kp_M4H84Xm5FWAXlBeHvsT8ehDqidn493px48zbiCNc
-
-{
-	"id": 202106,
-	"user_id": 101,
-	"fine_due": 0.00
-}
