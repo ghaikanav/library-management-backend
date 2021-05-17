@@ -25,7 +25,7 @@ Accept: application/json
 
 ### Login (tested)
 
-POST /api/login
+POST /api/users/login
 Host: localhost:8080
 Content-Type: application/json
 
