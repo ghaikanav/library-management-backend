@@ -28,6 +28,12 @@ GET  /api/books/genre/{genre}
 Host: localhost:8080
 Accept: application/json
 
+### Get most popular books (tested)
+
+GET  /api/books/mostpopular
+Host: localhost:8080
+Accept: application/json
+
 ### Get books sorted by filter and order(desc/asc) (tested)
 
 GET  /api/books/{filter}/{order}

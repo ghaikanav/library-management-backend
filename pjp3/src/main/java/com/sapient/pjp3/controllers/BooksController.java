@@ -61,6 +61,16 @@ public class BooksController {
     	return ResponseEntity.ok(map);
     }
     
+    @GetMapping("/mostpopular")
+    public ResponseEntity<?> getMostPopularBooks()
+    {
+    	BooksDao booksDao = new BooksDao();
+    	Map<String, Object> map = new HashMap<>();
+    	map.put("ListOfBooks", booksDao.getMostPopularBooks());
+    	
+    	return ResponseEntity.ok(map);
+    }
+    
     @GetMapping("/{isbn}")
     public ResponseEntity<?> getAllGenres(@PathVariable Long isbn)
     {

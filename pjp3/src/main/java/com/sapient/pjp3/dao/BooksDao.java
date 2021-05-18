@@ -32,6 +32,32 @@ public class BooksDao {
 		return bookResp;
 	}
 	
+	public List<Book> getMostPopularBooks(){
+		List<Book> books = new ArrayList<>();
+		
+		String sql = "Select * from BOOKS where rating>4.0 order by (rating*totalIssues) desc limit 50";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+		
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+	
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+			
+			while(rs.next()) {
+				books.add(resultSetToBook(rs));
+			}
+			
+			return books;
+			
+		} catch (Exception ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		return null;
+		
+		
+	}
+	
 	public List<Book> getBooksByGenre(String genre){
 		List<Book> books = new ArrayList<>();
 		
