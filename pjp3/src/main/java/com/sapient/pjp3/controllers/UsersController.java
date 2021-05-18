@@ -93,13 +93,16 @@ public class UsersController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> addUser(@RequestBody User user) {
+	public ResponseEntity<?> addUser(@RequestBody User user) throws Exception {
 		int check = usersDao.addUser(user);
 		
 		if(check != -1) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("success", usersDao.getUserByEmail(user.getEmail()));//lets see
-			map.put("user_id", usersDao.getUserByEmail(user.getEmail()).getId());
+			User user1 = usersDao.getUserByEmail(user.getEmail());
+			map.put("success", user1);//lets see
+			map.put("user_id", user1.getId());
+			map.put("token", JwtUtil.createToken(user1.getId(),user1.getFullname()));
+			
 			return ResponseEntity.ok(map);
 		}
 		
