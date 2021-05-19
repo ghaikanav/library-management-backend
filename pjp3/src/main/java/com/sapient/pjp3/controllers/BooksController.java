@@ -98,10 +98,14 @@ public class BooksController {
 			
 			log.info("THE returned", userId1);
 			BooksDao booksDao = new BooksDao();
-	    	Map<String, Object> map = new HashMap<>();
-	    	
-	    	map.put("Book", booksDao.borrowBook(isbn, userId1));
-			return ResponseEntity.ok(map);
+			if(booksDao.checkIfBorrowPossible(userId1)) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("Book", booksDao.borrowBook(isbn, userId1));
+				return ResponseEntity.ok(map);
+			}
+			else{
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Already Borrowed 5 Books");
+			}
 		}
 		catch(Exception ex) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());

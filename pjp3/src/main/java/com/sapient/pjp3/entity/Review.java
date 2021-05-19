@@ -10,4 +10,52 @@ public class Review {
 	private Long isbn;
 	private Integer rating;
 	private String review;
+
+	public Integer getReviewId() {
+		return reviewId;
+	}
+
+	public void setReviewId(Integer reviewId) {
+		this.reviewId = reviewId;
+	}
+
+	public Integer getIssueId() {
+		return issueId;
+	}
+
+	public void setIssueId(Integer issueId) {
+		this.issueId = issueId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Long getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(Long isbn) {
+		this.isbn = isbn;
+	}
+
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
+
+	public String getReview() {
+		return review;
+	}
+
+	public void setReview(String review) {
+		this.review = review;
+	}
 }

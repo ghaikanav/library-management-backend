@@ -1,1 +1,5 @@
 /.metadata/
+pjp3/src/main/resources/application.properties
+pjp3/src/main/resources/jdbc-info.properties
+/.idea
+/pjp3/target

@@ -185,6 +185,22 @@ public class BooksDao {
 		return null;
 	}
 
+	public boolean checkIfBorrowPossible(Integer userId){
+		String sql = "Select * from users where id = ? ;";
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);)
+		{
+			stmt.setLong(1, userId);
+			ResultSet rs =  stmt.executeQuery();
+			rs.next();
+			if(rs.getInt("currentBorrowedBooks") <= 5){
+				return true;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
 	public Book borrowBook(Long isbn, Integer userId) {
 		String sql = "Select * from book_copies where isbn = ? AND isBorrowed = 0 limit 1 ";
 		Logger log = LoggerFactory.getLogger(BooksDao.class);
@@ -194,21 +210,43 @@ public class BooksDao {
 			stmt.setLong(1, isbn);
 			log.info(stmt.toString());
 			ResultSet rs =  stmt.executeQuery();
-			
+
 			if(rs.next()) {
+				System.out.println(rs.getInt("bookId") + "..." + rs.getLong("isbn"));
 				updateBookCopiesTable(rs.getInt("bookId"));
 				updateBookIssuesTable(rs.getInt("bookId"), userId, isbn);
 				updateBooksTable(isbn);
-				return getBookByIsbn(isbn);
+				updateUsersTableForBorrow(userId);
+				return getBookByIsbn(rs.getLong("isbn"));
 			}
 			
-			
-			
 		} catch (Exception ex) {
-			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * Executed during Borrowing a book
+	 * Update Users table to increment number of current and total borrowed books
+	 * @param userId
+	 */
+	private void updateUsersTableForBorrow(Integer userId){
+		String sqlCurrBorrow = "UPDATE users SET currentBorrowedBooks = currentBorrowedBooks + 1 WHERE id = ?";
+		String sqlTotalBorrow = "UPDATE users SET totalBorrowedBooks = totalBorrowedBooks + 1 WHERE id = ?";
+		try (Connection conn = DBUtils.createConnection();
+			 PreparedStatement stmtCurr = conn.prepareStatement(sqlCurrBorrow ,  Statement.RETURN_GENERATED_KEYS);
+			 PreparedStatement stmtTotal = conn.prepareStatement(sqlTotalBorrow ,  Statement.RETURN_GENERATED_KEYS);) {
+
+			stmtCurr.setLong(1, userId);
+			stmtTotal.setLong(1, userId);
+
+			stmtCurr.executeUpdate();
+			stmtTotal.executeUpdate();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private void updateBooksTable(Long isbn) {
