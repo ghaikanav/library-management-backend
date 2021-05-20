@@ -15,7 +15,7 @@ import com.sapient.pjp3.utils.DBUtils;
 
 public class BookRequestsDao {
 	public static Boolean create(Integer userId,String title,String author) {
-		String sql = "INSERT INTO BOOK_REQUESTS(userId, title, author) values ( ?, ?, ?)";
+		String sql = "INSERT INTO book_requests(userId, title, author,requestedAt) values ( ?, ?, ?, sysdate())";
 		Logger log = LoggerFactory.getLogger(BookRequestsDao.class);
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
 			
