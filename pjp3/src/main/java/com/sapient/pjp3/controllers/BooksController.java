@@ -80,6 +80,15 @@ public class BooksController {
     	
     	return ResponseEntity.ok(map);
     }
+
+	@GetMapping("/available/{isbn}")
+	public ResponseEntity<?> checkIfCopiesAvailable(@PathVariable Long isbn)
+	{
+		BooksDao booksDao = new BooksDao();
+		Map<String, Object> map = new HashMap<>();
+		map.put("Availability", booksDao.checkCopyAvailability(isbn));
+		return ResponseEntity.ok(map);
+	}
     
     @GetMapping("/{isbn}/borrow")
     public ResponseEntity<?> borrowBook(@RequestHeader(name = "Authorization", required = false) String authHeader, 

@@ -1,6 +1,7 @@
 package com.sapient.pjp3.dao;
 
 import com.sapient.pjp3.entity.Book;
+import com.sapient.pjp3.entity.BookCopy;
 import com.sapient.pjp3.utils.DBUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -362,6 +363,33 @@ public class BooksDao {
 		
 		return getBooksByUser(userId, sql);
 		
+	}
+
+	/**
+	 * Check if any copy of the book is not borrowed
+	 * @param isbn
+	 * @return Boolean True/False
+	 */
+	public BookCopy checkCopyAvailability(Long isbn){
+		String sql = "Select * from book_copies where isbn = ? and isBorrowed = false";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+			stmt.setLong(1, isbn);
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+			if(rs.next()) {
+				BookCopy bookCopy = new BookCopy();
+				bookCopy.setIsbn(rs.getLong("isbn"));
+				bookCopy.setBorrowed(rs.getBoolean("isBorrowed"));
+				System.out.println(bookCopy);
+				return bookCopy;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
 	}
 
 }
