@@ -10,6 +10,15 @@ public class Review {
 	private Long isbn;
 	private Integer rating;
 	private String review;
+	private String userName;
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	public Integer getReviewId() {
 		return reviewId;

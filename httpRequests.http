@@ -1,6 +1,6 @@
 ### Get a specific book (tested)
 
-GET  /api/books/{isbn} 
+GET  /api/books/{isbn}
 Host: localhost:8080
 Accept: application/json
 

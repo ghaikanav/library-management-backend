@@ -29,7 +29,9 @@ public class ReviewsDao {
 	public Object getReviewsByIsbn(Long isbn) {
 		List<Review> reviews = new ArrayList<>();
 		
-		String sql = "Select * from reviews where isbn = ?";
+		String sql = "Select r.isbn, r.rating, r.review, r.userId, u.fullName " +
+				"from reviews as r inner join users as u " +
+				"on r.userId = u.id where r.isbn = ?";
 		Logger log = LoggerFactory.getLogger(BooksDao.class);
 		
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
@@ -55,6 +57,9 @@ public class ReviewsDao {
 	private Review resultSetToReviews(ResultSet rs) {
 		Review review = new Review();
 		try {
+			review.setIsbn(rs.getLong("isbn"));
+			review.setUserName(rs.getString("fullName"));
+			review.setUserId(rs.getInt("userId"));
 			review.setReview(rs.getString("review"));
 			review.setRating(rs.getInt("rating"));
 			
