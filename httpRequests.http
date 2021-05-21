@@ -108,11 +108,12 @@ Authorization: "Auth token from login"
 	"author" : "some author"
 }
 
-### Borrrow a book
+### Borrrow a book(tested)
 
-GET  /api/books/{isbn}/borrow
+GET  /api/books/8644590000000/borrow
 Host: localhost:8080
 Accept: application/json
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXNocnV0aCBWIiwiaWQiOjIwMSwiZXhwIjoxNjIxNjE4OTIxLCJpYXQiOjE2MjE2MTUzMjF9.R4kmtkoK2QZ2c-w2Xx_xmu3d12LaeslNJCIZFu4dWyI
 
 ### display previously borrowed books (tested)
 
@@ -121,5 +122,9 @@ Host: localhost:8080
 Accept: application/json
 Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGbG9yaWRhIFBpbmNoaW4iLCJpZCI6MiwiZXhwIjoxNjIxMjc0ODQ5LCJpYXQiOjE2MjEyNzEyNDl9.gP8bXGB9Sswiu9ylngbHgGSe8QhqZLxbpFIEr2kFzdI
 
+### return book (tested)
 
-
+GET  /api/books/8644590000000/return
+Host: localhost:8080
+Accept: application/json
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXNocnV0aCBWIiwiaWQiOjIwMSwiZXhwIjoxNjIxNjE4OTIxLCJpYXQiOjE2MjE2MTUzMjF9.R4kmtkoK2QZ2c-w2Xx_xmu3d12LaeslNJCIZFu4dWyI

@@ -4,6 +4,7 @@ package com.sapient.pjp3.controllers;
 import com.sapient.pjp3.dao.BookRequestsDao;
 import com.sapient.pjp3.dao.BooksDao;
 import com.sapient.pjp3.dao.ReviewsDao;
+import com.sapient.pjp3.dao.UsersDao;
 import com.sapient.pjp3.entity.Book;
 import com.sapient.pjp3.entity.BookRequest;
 import com.sapient.pjp3.entity.Review;
@@ -94,7 +95,7 @@ public class BooksController {
     public ResponseEntity<?> borrowBook(@RequestHeader(name = "Authorization", required = false) String authHeader, 
     		@PathVariable Long isbn){
     	Logger log = LoggerFactory.getLogger(BooksController.class);
-		log.info("authHeader = {}", authHeader);
+		log.info("\n Borrowing : \n authHeader = {}", authHeader);
     	if(authHeader==null) {
 			// Authorization header is missing
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
@@ -121,7 +122,76 @@ public class BooksController {
 		}
     
     }
-  
+
+	/**
+	 * Check if Book is Borrowed by User
+	 * @param authHeader
+	 * @param isbn
+	 * @return Boolean if book successfully returned or not
+	 */
+	@GetMapping("/{isbn}/checkBorrow")
+	public ResponseEntity<?> checkIfBookBorrowed(@RequestHeader(name = "Authorization", required = false) String authHeader,
+										@PathVariable Long isbn){
+		Logger log = LoggerFactory.getLogger(BooksController.class);
+		log.info("authHeader = {}", authHeader);
+		if(authHeader==null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
+		}
+
+		try {
+			String token1 = authHeader.split(" ")[1]; // second element from the header's value
+			log.info("token = {}", token1);
+			Integer userId = JwtUtil.verify(token1);
+
+			log.info("User ID", userId);
+			BooksDao booksDao = new BooksDao();
+			Map<String, Object> map = new HashMap<>();
+			map.put("Issued", booksDao.checkIfBorrowed(isbn, userId));
+			return ResponseEntity.ok(map);
+		}
+		catch(Exception ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
+		}
+
+	}
+
+	/**
+	 * Return Borrowed Book
+	 * @param authHeader
+	 * @param isbn
+	 * @return Boolean if book successfully returned or not
+	 */
+	@GetMapping("/{isbn}/return")
+	public ResponseEntity<?> returnBook(@RequestHeader(name = "Authorization", required = false) String authHeader,
+										@PathVariable Long isbn){
+		Logger log = LoggerFactory.getLogger(BooksController.class);
+		log.info("authHeader = {}", authHeader);
+		if(authHeader==null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
+		}
+
+		try {
+			String token1 = authHeader.split(" ")[1]; // second element from the header's value
+			log.info("token = {}", token1);
+			Integer userId = JwtUtil.verify(token1);
+
+			log.info("User ID", userId);
+			BooksDao booksDao = new BooksDao();
+
+			if(booksDao.returnBook(isbn, userId)) {
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body("Book Successfully Returned");
+			}
+			else{
+				return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Return Not Successfull");
+			}
+		}
+		catch(Exception ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
+		}
+
+	}
+
+
     @PostMapping("/request")
     public ResponseEntity<?> getOrdersForUser(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @RequestBody BookRequest request) throws Exception {

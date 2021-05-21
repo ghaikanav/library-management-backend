@@ -2,18 +2,20 @@ package com.sapient.pjp3.dao;
 
 import com.sapient.pjp3.entity.Book;
 import com.sapient.pjp3.entity.BookCopy;
+import com.sapient.pjp3.entity.Issue;
 import com.sapient.pjp3.utils.DBUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class BooksDao {
 	
@@ -365,6 +367,7 @@ public class BooksDao {
 		
 	}
 
+	/*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 	/**
 	 * Check if any copy of the book is not borrowed
 	 * @param isbn
@@ -391,5 +394,137 @@ public class BooksDao {
 		}
 		return null;
 	}
+
+	/*-----------------------------------------------------------------------------------------------------------------------------------------------*/
+
+	/**
+	 * Check if any copy of the book is not borrowed
+	 * @param isbn
+	 * @return Boolean True/False
+	 */
+	public Issue checkIfBorrowed(Long isbn, Integer userId){
+		String sql = "Select * from book_issues where isbn = ? and userId = ? and returnDate is null";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+			stmt.setLong(1, isbn);
+			stmt.setLong(2, userId);
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+			if(rs.next()) {
+				Issue newIssue = new Issue();
+				newIssue.setBookId(rs.getInt("bookId"));
+				newIssue.setIsbn(rs.getLong("isbn"));
+				newIssue.setUserId(rs.getInt("userId"));
+				newIssue.setBorrowDate(rs.getDate("borrowDate"));
+				return newIssue;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	/*-----------------------------------------------------------------------------------------------------------------------------------------------*/
+	/**
+	 * Returning Borrowed Books
+	 * @param isbn
+	 * @param userId
+	 */
+	public boolean returnBook(Long isbn, Integer userId){
+		String sql = "Update book_issues set returnDate = ?, fineDue = ?, isFinePaid = 0 where isbn = ? and userId = ? and returnDate is null";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+			Date now = new Date();
+			String returnDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now);
+			int fineAmount = calculateDueAmount(now, isbn, userId);
+
+			stmt.setString(1, returnDate);
+			stmt.setInt(2, fineAmount);
+			stmt.setLong(3, isbn);
+			stmt.setInt(4, userId);
+			log.info(stmt.toString());
+
+			if(stmt.executeUpdate() == 1){
+				return updateReturnBookCopies(now, isbn, userId) &&	updateReturnUsers(userId, fineAmount);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	public int calculateDueAmount(Date currentDate, Long isbn, Integer userId){
+		String sql = "Select borrowDate from book_issues where isbn = ? and userId = ? and returnDate is null";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+			stmt.setLong(1, isbn);
+			stmt.setInt(2, userId);
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+			rs.next();
+
+			Date borrowDate = rs.getDate("borrowDate");
+			System.out.println(borrowDate.toString());
+			long diff = currentDate.getTime() - borrowDate.getTime();
+			int amount = (int)(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) - 30) * 10;
+			if(amount > 0) {
+				return amount;
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return 0;
+	}
+
+	public boolean updateReturnBookCopies(Date retDate, Long isbn, Integer userId){
+		String sql = "Update book_copies set isBorrowed = 0 where isbn = ? and bookId in (Select bookId from book_issues where isbn = ? and userId = ? and returnDate = ?)";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+			String returnDate = new SimpleDateFormat("yyyy-MM-dd").format(retDate);
+			stmt.setLong(1, isbn);
+			stmt.setLong(2, isbn);
+			stmt.setInt(3, userId);
+			stmt.setString(4, returnDate);
+			log.info(stmt.toString());
+			if(stmt.executeUpdate() == 1){
+				System.out.println("Updated Book Copies");
+				return true;
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean updateReturnUsers(Integer userId, int fineAmount){
+		String sql = "Update users set currentBorrowedBooks = currentBorrowedBooks - 1, fine = fine + ? where id = ?";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+			stmt.setLong(1, fineAmount);
+			stmt.setInt(2, userId);
+			log.info(stmt.toString());
+			if(stmt.executeUpdate() == 1){
+				System.out.println("\n Updated Users Table");
+				return true;
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	/*-----------------------------------------------------------------------------------------------------------------------------------------------*/
 
 }
