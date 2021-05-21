@@ -322,10 +322,9 @@ public class BooksDao {
 		return;
 	}
 
-	public List<Book> getPreviousBooks(Integer userId) {
+	public List<Book> getBooksByUser(Integer userId, String sql) {
 		List<Book> books = new ArrayList<>();
 		
-		String sql = "SELECT * from books,book_issues where books.isbn = book_issues.isbn AND userId = ?";
 		Logger log = LoggerFactory.getLogger(BooksDao.class);
 		
 		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
@@ -346,6 +345,22 @@ public class BooksDao {
 			ex.printStackTrace();
 		}
 		return null;
+		
+	}
+	
+	public List<Book> getCurrentBooks(Integer userId) {
+		String sql = "SELECT * from books,book_issues where "
+				+ "books.isbn = book_issues.isbn AND book_issues.returnDate IS NULL AND userId = ?";
+		
+		return getBooksByUser(userId, sql);
+		
+	}
+
+	public List<Book> getPreviousBooks(Integer userId) {
+		String sql = "SELECT * from books,book_issues where "
+				+ "books.isbn = book_issues.isbn AND book_issues.returnDate IS NOT NULL AND userId = ?";
+		
+		return getBooksByUser(userId, sql);
 		
 	}
 

@@ -51,7 +51,7 @@ public class UsersController {
 	}
 	
 	@GetMapping("/borrowedBooks")
-	public ResponseEntity<?> getPreviousBooks(@RequestHeader(name = "Authorization", required = false) String authHeader) {
+	public ResponseEntity<?> getBorrowedBooks(@RequestHeader(name = "Authorization", required = false) String authHeader) {
 		Logger log = LoggerFactory.getLogger(BooksController.class);
 		log.info("authHeader = {}", authHeader);
 		if(authHeader==null) {
@@ -65,7 +65,8 @@ public class UsersController {
 			
 			log.info("THE returned", userId);
 			Map<String, Object> map = new HashMap<>();
-			map.put("success", booksDao.getPreviousBooks(userId));//lets see
+			map.put("current", booksDao.getCurrentBooks(userId));
+			map.put("previous", booksDao.getPreviousBooks(userId));
 			map.put("user_id", userId);
 			return ResponseEntity.ok(map);
 		}
