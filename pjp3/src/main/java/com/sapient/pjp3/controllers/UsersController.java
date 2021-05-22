@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.sapient.pjp3.dao.BookRequestsDao;
 import com.sapient.pjp3.dao.BooksDao;
 import com.sapient.pjp3.dao.UsersDao;
+import com.sapient.pjp3.dao.ReviewsDao;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +25,10 @@ import java.util.Map;
 public class UsersController {
 	UsersDao usersDao = new UsersDao();
 	BooksDao booksDao = new BooksDao();
+	ReviewsDao reviewsDao = new ReviewsDao();
 	
 	@GetMapping
-	public ResponseEntity<?> getUser(@RequestHeader(name = "Authorization", required = false) String authHeader) {
+	public ResponseEntity<?> getUser(@RequestHeader(name = "Authorization", required = true) String authHeader) {
 		Logger log = LoggerFactory.getLogger(BooksController.class);
 		log.info("authHeader = {}", authHeader);
 		if(authHeader==null) {
@@ -51,7 +53,7 @@ public class UsersController {
 	}
 	
 	@GetMapping("/borrowedBooks")
-	public ResponseEntity<?> getBorrowedBooks(@RequestHeader(name = "Authorization", required = false) String authHeader) {
+	public ResponseEntity<?> getBorrowedBooks(@RequestHeader(name = "Authorization", required = true) String authHeader) {
 		Logger log = LoggerFactory.getLogger(BooksController.class);
 		log.info("authHeader = {}", authHeader);
 		if(authHeader==null) {
@@ -111,7 +113,7 @@ public class UsersController {
 	}
 	
 	@GetMapping("/payFine")
-	public ResponseEntity<?> payFine(@RequestHeader(name = "Authorization", required = false) String authHeader){
+	public ResponseEntity<?> payFine(@RequestHeader(name = "Authorization", required = true) String authHeader){
 		Logger log = LoggerFactory.getLogger(UsersController.class);
 		log.info("authHeader = {}", authHeader);
 		if(authHeader==null) {
@@ -126,6 +128,33 @@ public class UsersController {
 			log.info("THE returned", userId);
 			Map<String, Object> map = new HashMap<>();
 			map.put("success", usersDao.payFine(userId));//lets see
+			map.put("user_id", userId);
+			return ResponseEntity.ok(map);
+		}
+		catch(Exception ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is invalid or " + ex.getMessage());
+		}
+		
+		
+	}
+	
+	
+	@GetMapping("/reviews")
+	public ResponseEntity<?> getReviews(@RequestHeader(name = "Authorization", required = true) String authHeader){
+		Logger log = LoggerFactory.getLogger(UsersController.class);
+		log.info("authHeader = {}", authHeader);
+		if(authHeader==null) {
+			// Authorization header is missing
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authorization token is missing");
+		}
+		try {
+			String token1 = authHeader.split(" ")[1]; // second element from the header's value
+			log.info("token = {}", token1);
+			Integer userId = JwtUtil.verify(token1);
+			
+			log.info("THE returned", userId);
+			Map<String, Object> map = new HashMap<>();
+			map.put("reviews", reviewsDao.getReviewsByUser(userId));//lets see
 			map.put("user_id", userId);
 			return ResponseEntity.ok(map);
 		}

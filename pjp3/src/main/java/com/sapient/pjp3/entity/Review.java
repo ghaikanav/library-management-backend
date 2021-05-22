@@ -11,7 +11,16 @@ public class Review {
 	private Integer rating;
 	private String review;
 	private String userName;
+	private String bookTitle;
 
+	public String getBookTitle() {
+		return bookTitle;
+	}
+
+	public void setBookTitle(String bookTitle) {
+		this.bookTitle = bookTitle;
+	}
+	
 	public String getUserName() {
 		return userName;
 	}
