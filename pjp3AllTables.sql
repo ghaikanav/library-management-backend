@@ -1552,5 +1552,10 @@ ALTER TABLE `reviews`
   ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`issueId`) REFERENCES `book_issues` (`bookIssueId`),
   ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `reviews_ibfk_3` FOREIGN KEY (`isbn`) REFERENCES `books` (`isbn`);
+--
+-- Add column "fullName" to reviews
+--
+ALTER TABLE `reviews` ADD `fullName` VARCHAR(30) NULL AFTER `review`;
+update reviews SET fullName = (SELECT fullName from users WHERE users.id = reviews.userId);
 COMMIT;
 
