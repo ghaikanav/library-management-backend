@@ -26,10 +26,46 @@ public class ReviewsDao {
 		return rs.getInt(1);
 	}
 	
+	public Object getReviewsByUser(int userId) {
+		List<Review> reviews = new ArrayList<>();
+
+		String sql = "Select r.reviewId, r.isbn, r.rating, r.review, r.userId, r.fullName, b.title " +
+				"from reviews as r inner join books as b " +
+				"on r.isbn = b.isbn where r.userId = ?";
+		Logger log = LoggerFactory.getLogger(BooksDao.class);
+
+		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
+
+			stmt.setLong(1, userId);
+			log.info(stmt.toString());
+			ResultSet rs =  stmt.executeQuery();
+
+			while(rs.next()) {
+				Review review = resultSetToReviews(rs);
+				try {
+					review.setBookTitle(rs.getString("title"));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				reviews.add(review);
+			}
+
+			return reviews;
+
+		} catch (Exception ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		return null;
+
+	}
+	
 	public Object getReviewsByIsbn(Long isbn) {
 		List<Review> reviews = new ArrayList<>();
 		
-		String sql = "Select r.reviewId, r.isbn, r.rating, r.review, r.userId, u.fullName " +
+		String sql = "Select r.isbn, r.rating, r.review, r.userId, r.reviewId, u.fullName " +
 				"from reviews as r inner join users as u " +
 				"on r.userId = u.id where r.isbn = ?";
 		Logger log = LoggerFactory.getLogger(BooksDao.class);
@@ -41,15 +77,7 @@ public class ReviewsDao {
 			ResultSet rs =  stmt.executeQuery();
 			
 			while(rs.next()) {
-				Review review = resultSetToReviews(rs);
-				try {
-					review.setUserName(rs.getString("fullName"));
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				reviews.add(review);
+				reviews.add(resultSetToReviews(rs));
 			}
 			
 			return reviews;
@@ -67,10 +95,11 @@ public class ReviewsDao {
 		try {
 			review.setReviewId(rs.getInt("reviewId"));
 			review.setIsbn(rs.getLong("isbn"));
+			review.setFullName(rs.getString("fullName"));
 			review.setUserId(rs.getInt("userId"));
 			review.setReview(rs.getString("review"));
 			review.setRating(rs.getInt("rating"));
-			
+			System.out.println(rs.toString());
 			return review;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -125,41 +154,5 @@ public class ReviewsDao {
 			ex.printStackTrace();
 		}
 		return false;
-	}
-	
-	public Object getReviewsByUser(int userId) {
-		List<Review> reviews = new ArrayList<>();
-		
-		String sql = "Select r.reviewId, r.isbn, r.rating, r.review, r.userId, b.title " +
-				"from reviews as r inner join books as b " +
-				"on r.isbn = b.isbn where r.userId = ?";
-		Logger log = LoggerFactory.getLogger(BooksDao.class);
-		
-		try (Connection conn = DBUtils.createConnection(); PreparedStatement stmt = conn.prepareStatement(sql);) {
-	
-			stmt.setLong(1, userId);
-			log.info(stmt.toString());
-			ResultSet rs =  stmt.executeQuery();
-			
-			while(rs.next()) {
-				Review review = resultSetToReviews(rs);
-				try {
-					review.setBookTitle(rs.getString("title"));
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				reviews.add(review);
-			}
-			
-			return reviews;
-			
-		} catch (Exception ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
-		}
-		return null;
-		
 	}
 }
