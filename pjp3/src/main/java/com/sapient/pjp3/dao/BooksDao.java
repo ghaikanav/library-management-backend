@@ -195,7 +195,7 @@ public class BooksDao {
 			stmt.setLong(1, userId);
 			ResultSet rs =  stmt.executeQuery();
 			rs.next();
-			if(rs.getInt("currentBorrowedBooks") <= 5){
+			if(rs.getInt("currentBorrowedBooks") < 5){
 				return true;
 			}
 		} catch (Exception ex) {
